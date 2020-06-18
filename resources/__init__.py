@@ -1,2 +1,2 @@
-from .mail_server import TempMailServer
-from .mailbox import Mailbox
+from .mail_server import TempMailServer, Mailbox
+from .auth import Auth
