@@ -1,5 +1,5 @@
 from flask_restful import Resource
 
 
-class MailStorage(Resource):
+class Mailbox(Resource):
     pass
