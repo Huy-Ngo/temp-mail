@@ -1,5 +1,6 @@
 from string import digits, ascii_lowercase
 from random import choice
+from http import HTTPStatus
 
 from flask_restful import Resource
 from flask_jwt_extended import create_access_token
@@ -23,3 +24,7 @@ class Auth(Resource):
         token = create_access_token(identity=new_address)
         new_user = UserModel(new_address, token)
         new_user.save_to_db()
+        return {
+            'account': new_user.json(),
+            'status': HTTPStatus.CREATED
+        }
