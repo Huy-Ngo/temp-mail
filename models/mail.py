@@ -22,6 +22,14 @@ class MailModel(db.Model):
     def fetch_all(cls):
         return cls.query.all()
 
+    @classmethod
+    def fetch_by_address(cls, address):
+        return cls.query.filter_by(recipient=address).all()
+
+    @classmethod
+    def fetch_by_id(cls, _id):
+        return cls.query.filter_by(id=_id).first()
+
     def save_to_db(self):
         db.session.add(self)
         db.session.commit()
