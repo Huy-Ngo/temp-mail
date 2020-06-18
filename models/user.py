@@ -19,6 +19,14 @@ class UserModel(db.Model):
                 'is_expired': self.is_expired}
 
     @classmethod
+    def find_by_address(cls, address):
+        return cls.query.filter_by(email_address=address).first()
+
+    @classmethod
+    def find_by_id(cls, _id):
+        return cls.query.filter_by(id=_id).first()
+
+    @classmethod
     def fetch_all(cls):
         return cls.query.all()
 
