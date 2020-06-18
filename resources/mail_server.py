@@ -25,16 +25,18 @@ class Mailbox(Resource):
     def get(self):
         """Retrieve all mails from the mail box."""
         address = get_jwt_identity()
+        if address is None:
+            return {
+                'message': 'The mail account does not exists or has expired.'
+            }, HTTPStatus.BAD_REQUEST
         mails = MailModel.fetch_by_address(address)
         if len(address) == 0:
             return {
                 'message': 'No mails found.',
-                'status': HTTPStatus.NOT_FOUND
-            }
+            }, HTTPStatus.NOT_FOUND
         return {
-            'mails': [mail.json() for mail in mails],
-            'status': HTTPStatus.OK
-        }
+            'mails': [mail.json() for mail in mails]
+        }, HTTPStatus.OK
 
 
 class Mail(Resource):
@@ -45,9 +47,7 @@ class Mail(Resource):
         if mail is None:
             return {
                 'message': f'No mail with id {_id} found',
-                'status': HTTPStatus.NOT_FOUND
-            }
+            }, HTTPStatus.NOT_FOUND
         return {
-            'mail': mail,
-            'status': HTTPStatus.OK
-        }
+            'mail': mail
+        }, HTTPStatus.OK
