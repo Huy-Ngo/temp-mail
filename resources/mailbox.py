@@ -2,11 +2,17 @@ from http import HTTPStatus
 
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from flask_restful import Resource
+from flask_restful.reqparse import RequestParser
 
 from models import UserModel, MailModel
 
 
 class Mailbox(Resource):
+    parser = RequestParser()
+    parser.add_argument('sender', help='The address of the sender.')
+    parser.add_argument('recipient', help='The address that receives this email.')
+    parser.add_argument('body', help='The content of the mail.')
+
     @jwt_required
     def get(self):
         """Retrieve all mails from the mail box."""
@@ -26,6 +32,12 @@ class Mailbox(Resource):
                 'message': 'No mails found.',
             }, HTTPStatus.NOT_FOUND
         return {'mails': [mail.json() for mail in mails]}, HTTPStatus.OK
+
+    def post(self):
+        """Receive an email and save it to database."""
+        data = Mailbox.parser.parse_args()
+        mail = MailModel(*data)
+        mail.save_to_db()
 
 
 class Mail(Resource):
