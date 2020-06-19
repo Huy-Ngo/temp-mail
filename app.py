@@ -1,4 +1,5 @@
 from asyncore import loop
+from threading import Thread
 
 from flask import Flask
 from flask_restful import Api
@@ -23,7 +24,18 @@ def create_database():
     db.create_all()
 
 
-if __name__ == '__main__':
-    app.run()
+def run_mail_server():
     server = TempMailServer(('127.0.0.1', 1025), None)
+    print('This is running.')
     loop()
+
+
+if __name__ == '__main__':
+    app_thread = Thread(target=app.run)
+    mail_server_thread = Thread(target=run_mail_server)
+
+    app_thread.start()
+    mail_server_thread.start()
+
+    app_thread.join()
+    mail_server_thread.join()
