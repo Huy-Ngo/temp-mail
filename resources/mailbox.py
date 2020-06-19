@@ -11,7 +11,7 @@ class Mailbox(Resource):
     parser = RequestParser()
     parser.add_argument('sender', help='The address of the sender.')
     parser.add_argument('recipient', help='The address that receives this email.')
-    parser.add_argument('body', help='The content of the mail.')
+    parser.add_argument('message', help='The content of the mail.')
 
     @jwt_required
     def get(self):
@@ -36,8 +36,12 @@ class Mailbox(Resource):
     def post(self):
         """Receive an email and save it to database."""
         data = Mailbox.parser.parse_args()
-        mail = MailModel(*data)
+        mail = MailModel(**data)
         mail.save_to_db()
+        return {
+            'message': 'Delivered mail successfully',
+            'mail': mail.json()
+        }, HTTPStatus.CREATED
 
 
 class Mail(Resource):
