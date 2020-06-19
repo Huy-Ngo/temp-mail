@@ -43,7 +43,7 @@ class UserModel(db.Model):
         `False` if it has expired."""
         expiration_time = self.create_at + timedelta(minutes=15)
         current_time = datetime.utcnow()
-        return expiration_time < current_time
+        return expiration_time > current_time
 
     def save_to_db(self):
         db.session.add(self)
