@@ -34,7 +34,7 @@ class UserModel(db.Model):
 
     @classmethod
     def fetch_all(cls):
-        return cls.query.all()
+        return [mail.json() for mail in cls.query.all()]
 
     def check_validity(self):
         """Check if the token is still valid.

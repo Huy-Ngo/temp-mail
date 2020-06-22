@@ -15,6 +15,15 @@ def generate_random_string():
 
 class Auth(Resource):
     """API Resource for getting a new mail address."""
+    def get(self):
+        """Fetch the list of the emails."""
+        mails = UserModel.fetch_all()
+        for mail in mails:
+            mail.pop('token')
+        return {
+            'mails': mails
+        }, HTTPStatus.OK
+
     def post(self):
         # Replace abcxyz.com with appropriate host
         new_address = generate_random_string() + '@abcxyz.com'
