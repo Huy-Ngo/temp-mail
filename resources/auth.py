@@ -26,5 +26,4 @@ class Auth(Resource):
         new_user.save_to_db()
         return {
             'account': new_user.json(),
-            'status': HTTPStatus.CREATED
-        }
+        }, HTTPStatus.CREATED
