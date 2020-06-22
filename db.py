@@ -1,3 +1,3 @@
-from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import declarative_base
 
-db = SQLAlchemy()
+Base = declarative_base()

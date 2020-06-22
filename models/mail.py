@@ -1,11 +1,12 @@
-from db import db
+from sqlalchemy import Column, Integer, String
+from db import Base
 
 
-class MailModel(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    sender = db.Column(db.String(254))
-    recipient = db.Column(db.String(254))
-    message = db.Column(db.String)
+class MailModel(Base):
+    id = Column(Integer, primary_key=True)
+    sender = Column(String(254))
+    recipient = Column(String(254))
+    message = Column(String)
 
     def __init__(self, sender, recipient, message):
         self.sender = sender
@@ -31,5 +32,5 @@ class MailModel(db.Model):
         return cls.query.filter_by(id=_id).first()
 
     def save_to_db(self):
-        db.session.add(self)
-        db.session.commit()
+        session.add(self)
+        session.commit()
