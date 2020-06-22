@@ -16,7 +16,10 @@ def generate_random_string():
 class Auth(Resource):
     """API Resource for getting a new mail address."""
     def get(self):
-        """Fetch the list of the emails."""
+        """Fetch the list of the emails.
+
+        This is for testing and debugging purpose only.
+        """
         mails = UserModel.fetch_all()
         for mail in mails:
             mail.check_validity()
