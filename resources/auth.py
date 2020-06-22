@@ -19,9 +19,9 @@ class Auth(Resource):
         """Fetch the list of the emails."""
         mails = UserModel.fetch_all()
         for mail in mails:
-            mail.pop('token')
+            mail.check_validity()
         return {
-            'mails': mails
+            'mails': [mail.json() for mail in mails]
         }, HTTPStatus.OK
 
     def post(self):
