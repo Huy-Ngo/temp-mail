@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block title %} Mailbox - {{ mail_address }} {% endblock %}
+{% block content %}
+    {% for mail in all_mails %}
+        <div class="mail">
+            id: {{ mail['id'] }}
+            from: {{ mail['sender'] }}
+            to: {{ mail['recipient'] }}
+        </div>
+    {% endfor %}
+{% endblock %}
