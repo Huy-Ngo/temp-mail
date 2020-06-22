@@ -2,6 +2,7 @@ from flask import Flask
 from flask_restful import Api
 from flask_jwt_extended import JWTManager
 
+from db import db
 from resources import Mailbox, Auth, Mail
 
 app = Flask(__name__)
@@ -9,6 +10,7 @@ app.config.from_json('config.json')
 
 api = Api(app)
 jwt = JWTManager(app)
+db.init_app(app)
 
 api.add_resource(Mailbox, '/mail/')
 api.add_resource(Mail, '/mail/<int:_id>')

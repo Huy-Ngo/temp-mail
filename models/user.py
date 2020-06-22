@@ -1,16 +1,14 @@
 from datetime import datetime, timedelta
 
-from sqlalchemy import Column, Boolean, DateTime, Integer, String
-
-from db import Base
+from db import db
 
 
-class UserModel(Base):
-    id = Column(Integer, primary_key=True)
-    email_address = Column(String(254), unique=True)
-    token = Column(String(256))
-    is_expired = Column(Boolean)
-    create_at = Column(DateTime, default=datetime.utcnow())
+class UserModel(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    email_address = db.Column(db.String(254))
+    token = db.Column(db.String(256))
+    is_expired = db.Column(db.Boolean)
+    create_at = db.Column(db.DateTime, default=datetime.utcnow())
 
     def __init__(self, email_address, token):
         self.email_address = email_address
@@ -48,5 +46,5 @@ class UserModel(Base):
         return expiration_time > current_time
 
     def save_to_db(self):
-        session.add(self)
-        session.commit()
+        db.session.add(self)
+        db.session.commit()
