@@ -15,7 +15,7 @@ build/
 
 .idea/
 
-config.json
+*.json
 
 *.xml
 *.iml
