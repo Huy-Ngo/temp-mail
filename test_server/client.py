@@ -20,14 +20,14 @@ def new_address():
         dump({'email_address': recipient, 'token': token}, f)
 
 
-def send_mail(recipient):
+def send_mail(recipient, subject='Simple test message', message='This is the body of the message.'):
     # Create the message
-    msg = MIMEText('This is the body of the message.')
+    msg = MIMEText(message)
     msg['To'] = email.utils.formataddr(('Recipient',
                                         recipient))
     msg['From'] = email.utils.formataddr(('Author',
                                           'author@example.com'))
-    msg['Subject'] = 'Simple test message'
+    msg['Subject'] = subject
 
     server = smtplib.SMTP('127.0.0.1', 1025)
     server.set_debuglevel(True)  # show communication with the server
