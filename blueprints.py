@@ -21,7 +21,7 @@ def mailbox(address, token):
 
 @bp.route('/mail/<address>/<token>/<int:_id>')
 def mail(address, token, _id):
-    all_mails = receive_mail(token)
+    all_mails = receive_mail(token)['mails']
     for email in all_mails:
         if email['id'] == _id and email['recipient'] == address:
             return render_template('views/mail.html', mail=email)
