@@ -42,7 +42,7 @@ def send_mail(recipient):
 def receive_mail(token):
     r = requests.get('http://127.0.0.1:5000/mail/',
                      headers={'Authorization': f'Bearer {token}'})
-    return r.json()['mails']
+    return r.json()
 
 
 if __name__ == '__main__':
