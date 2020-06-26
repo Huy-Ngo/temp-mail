@@ -29,9 +29,9 @@ def mail(address, token, _id):
 
 
 @bp.route('/send', methods=['GET', 'POST'])
-def send_mail():
+def send_view():
     if request.method == 'POST':
-        recipient = request.form['to']
+        recipient = request.form['recipient']
         subject = request.form['subject']
         message = request.form['message']
         send_mail(recipient, subject, message)
