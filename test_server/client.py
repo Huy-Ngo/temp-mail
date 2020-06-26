@@ -12,12 +12,13 @@ def new_address():
 
     data = r.json()
     print(data)
-    recipient = data['account']['email_address']
+    address = data['account']['email_address']
     token = data['account']['token']
-    print(recipient)
+    print(address)
     print(token)
     with open('token.json', 'w') as f:
-        dump({'email_address': recipient, 'token': token}, f)
+        dump({'email_address': address, 'token': token}, f)
+    return address, token
 
 
 def send_mail(recipient, subject='Simple test message', message='This is the body of the message.'):
