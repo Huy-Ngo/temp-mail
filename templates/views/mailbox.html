@@ -1,11 +1,20 @@
 {% extends 'base.html' %}
-{% block title %} Mailbox - {{ mail_address }} {% endblock %}
+{% block title %} Mailbox - {{ address }} {% endblock %}
 {% block content %}
-    {% for mail in all_mails %}
-        <div class="mail">
-            id: {{ mail['id'] }}
-            from: {{ mail['sender'] }}
-            to: {{ mail['recipient'] }}
-        </div>
-    {% endfor %}
+    <div>Your mail address is: {{ address }}</div>
+    <div>
+        <h1>Mailbox</h1>
+    {% if mails|length > 0 %}
+        You have {{ mails|length }} mail(s):
+        {% for mail in mails %}
+            <div class="mail">
+                id: {{ mail['id'] }}
+                from: {{ mail['sender'] }}
+                to: {{ mail['recipient'] }}
+            </div>
+        {% endfor %}
+    {% else %}
+        <div>Your mailbox is empty</div>
+    {% endif %}
+    </div>
 {% endblock %}

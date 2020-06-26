@@ -8,14 +8,15 @@ bp = Blueprint('gui', __name__, url_prefix='/gui')
 def auth():
     if request.method == 'POST':
         address, token = new_address()
-        return redirect(url_for('mailbox', address=address, token=token))
+        return redirect(url_for('.mailbox', address=address, token=token))
     return render_template('views/auth.html')
 
 
 @bp.route('/mail/<address>/<token>')
 def mailbox(address, token):
+    url_for('mailbox', address=address, token=token)
     all_mails = receive_mail(token)
-    return render_template('views/mailbox.html', address=address, mails=all_mails)
+    return render_template('views/mailbox.html', address=address, mails=all_mails['mails'])
 
 
 @bp.route('/mail/<address>/<token>/<int:_id>')
