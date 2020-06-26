@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block title %} Send a mail {% endblock %}
+{% block content %}
+    <form>
+        <label for="recipient">Recipient</label>
+        <input type="text" id="recipient" name="recipient">
+        <label for="subject"></label>
+        <input type="text" id="subject" name="subject">
+        <label for="message">Message</label>
+        <textarea name="message" id="message" cols="30" rows="10"></textarea>
+        <button id="send">Send</button>
+    </form>
+{% endblock %}
