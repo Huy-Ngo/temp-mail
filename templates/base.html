@@ -6,6 +6,12 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
+<nav>
+    <ul>
+        <li><a href="{{ url_for('gui.auth') }}">Get a new mail</a> </li>
+        <li><a href="{{ url_for('gui.send_view') }}">Send a mail</a> </li>
+    </ul>
+</nav>
 {% block content %}
 {% endblock %}
 </body>
