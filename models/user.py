@@ -8,7 +8,7 @@ class UserModel(db.Model):
     email_address = db.Column(db.String(254))
     token = db.Column(db.String(256))
     is_expired = db.Column(db.Boolean)
-    create_at = db.Column(db.DateTime, default=datetime.utcnow())
+    create_at = db.Column(db.DateTime, default=datetime.utcnow)
 
     def __init__(self, email_address, token):
         self.email_address = email_address
