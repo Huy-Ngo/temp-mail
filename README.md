@@ -29,8 +29,8 @@ cd test_server
 python3 server.py
 ```
 
-Run `client.py` to send a mail to this server.
+Run `client.py` to get a new email, send a mail to this server, or read the mails.
 
 ```shell script
-python3 client.py
+python3 client.py [new/send/read]
 ```

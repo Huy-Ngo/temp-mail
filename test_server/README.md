@@ -13,5 +13,3 @@ to this address.
 The server upon receiving the email from the client
 will send a POST request to the API to save the mail
 to the database.
-
-There hasn't been a script for viewing email yet.
