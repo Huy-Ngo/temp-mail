@@ -7,11 +7,13 @@
     {% if mails|length > 0 %}
         You have {{ mails|length }} mail(s):
         {% for mail in mails %}
-            <div class="mail">
-                id: {{ mail['id'] }}
-                from: {{ mail['sender'] }}
-                to: {{ mail['recipient'] }}
-            </div>
+            <a href="{{ url_for('gui.mail', address=address, token=token, _id=mail['id']) }}">
+                <div class="mail">
+                    id: {{ mail['id'] }}
+                    from: {{ mail['sender'] }}
+                    to: {{ mail['recipient'] }}
+                </div>
+            </a>
         {% endfor %}
     {% else %}
         <div>Your mailbox is empty</div>

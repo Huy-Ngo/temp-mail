@@ -16,7 +16,7 @@ def auth():
 def mailbox(address, token):
     url_for('mailbox', address=address, token=token)
     all_mails = receive_mail(token)
-    return render_template('views/mailbox.html', address=address, mails=all_mails['mails'])
+    return render_template('views/mailbox.html', address=address, token=token, mails=all_mails['mails'])
 
 
 @bp.route('/mail/<address>/<token>/<int:_id>')
