@@ -3,6 +3,7 @@ from flask_restful import Api
 from flask_jwt_extended import JWTManager
 
 from db import db
+from blueprints import bp
 from resources import Mailbox, Auth, Mail
 
 app = Flask(__name__)
@@ -15,6 +16,8 @@ db.init_app(app)
 api.add_resource(Mailbox, '/mail/')
 api.add_resource(Mail, '/mail/<int:_id>')
 api.add_resource(Auth, '/auth/')
+
+app.register_blueprint(bp)
 
 
 @app.before_first_request
