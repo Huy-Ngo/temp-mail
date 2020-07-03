@@ -4,7 +4,7 @@ from db import db
 class MailModel(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     sender = db.Column(db.String(254))
-    recipient = db.Column(db.String(254))
+    recipient = db.Column(db.String(254), db.ForeignKey('user_model.email_address'), nullable=False)
     message = db.Column(db.String)
 
     def __init__(self, sender, recipient, message):
