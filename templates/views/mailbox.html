@@ -9,9 +9,11 @@
         {% for mail in mails %}
             <a href="{{ url_for('gui.mail', address=address, token=token, _id=mail['id']) }}">
                 <div class="mail">
-                    id: {{ mail['id'] }}
-                    from: {{ mail['sender'] }}
-                    to: {{ mail['recipient'] }}
+                    <div>id: {{ mail['id'] }}</div>
+                    <div>from: {{ mail['headers']['from'] }}</div>
+                    <div>to: {{ mail['headers']['to'] }}</div>
+                    <div>subject: {{ mail['headers']['subject'] }}</div>
+                    <div>date: {{ mail['headers']['date'] }}</div>
                 </div>
             </a>
         {% endfor %}

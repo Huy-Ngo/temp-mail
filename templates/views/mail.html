@@ -1,8 +1,9 @@
 {% extends 'base.html' %}
 {% block title %} Mail {% endblock %}
 {% block content %}
-    <div class="id"> {{ mail['id'] }} </div>
-    <div class="sender"> From: {{ mail['sender'] }} </div>
-    <div class="recipient"> To: {{ mail['recipient'] }} </div>
-    <div class="message"> Message: <pre>{{ mail['message'] }}</pre> </div>
+    <div class="id"> #{{ mail['id'] }} </div>
+    <div class="from">From: {{ mail['headers']['from'] }}</div>
+    <div class="to">To: {{ mail['headers']['to'] }}</div>
+    <div class="subject">Subject: {{ mail['headers']['subject'] }}</div>
+    <div class="message"> Message: <pre>{{ mail['payload']['text'] }}</pre> </div>
 {% endblock %}
