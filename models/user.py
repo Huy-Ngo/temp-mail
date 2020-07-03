@@ -9,6 +9,7 @@ class UserModel(db.Model):
     token = db.Column(db.String(256))
     is_expired = db.Column(db.Boolean)
     create_at = db.Column(db.DateTime, default=datetime.utcnow)
+    mails = db.relationship('MailModel', backref='user', lazy=True)
 
     def __init__(self, email_address, token):
         self.email_address = email_address
