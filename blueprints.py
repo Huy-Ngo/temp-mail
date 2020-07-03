@@ -26,13 +26,3 @@ def mail(address, token, _id):
         if email['id'] == _id and email['recipient'] == address:
             return render_template('views/mail.html', mail=email)
     flash('Invalid mail ID or unauthorized')
-
-
-@bp.route('/send', methods=['GET', 'POST'])
-def send_view():
-    if request.method == 'POST':
-        recipient = request.form['recipient']
-        subject = request.form['subject']
-        message = request.form['message']
-        send_mail(recipient, subject, message)
-    return render_template('views/send_mail.html')
