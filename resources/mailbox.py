@@ -1,4 +1,6 @@
 from http import HTTPStatus
+from email.parser import Parser
+from email.policy import default
 
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from flask_restful import Resource
@@ -36,7 +38,19 @@ class Mailbox(Resource):
     def post(self):
         """Receive an email and save it to database."""
         data = Mailbox.parser.parse_args()
-        mail = MailModel(**data)
+        headers = Parser(policy=default).parsestr(data['message'])
+        mail_from = headers['from']
+        rcpt_to = headers['to']
+        date = headers['date']
+        subject = headers['subject']
+        text = headers.get_payload(0).get_payload()
+        html = headers.get_payload(1).get_payload()
+        mail = MailModel(sender=data['sender'],
+                         recipient=data['recipient'],
+                         mail_from=mail_from,
+                         rcpt_to=rcpt_to,
+                         date=date, subject=subject,
+                         text=text, html=html)
         mail.save_to_db()
         return {
             'message': 'Delivered mail successfully',
