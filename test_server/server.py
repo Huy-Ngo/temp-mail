@@ -10,7 +10,8 @@ url = 'http://127.0.0.1:5000/mail/'
 
 
 def send_request(mailfrom, rcpttos, data):
-    data = data.decode("utf-8")
+    if data is bytes:
+        data = data.decode("utf-8")
     headers = Parser(policy=default).parsestr(data)
     content = headers.get_payload()
     if content is list:
