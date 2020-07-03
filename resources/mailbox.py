@@ -11,7 +11,12 @@ class Mailbox(Resource):
     parser = RequestParser()
     parser.add_argument('sender', help='The address of the sender.')
     parser.add_argument('recipient', help='The address that receives this email.')
-    parser.add_argument('message', help='The content of the mail.')
+    parser.add_argument('mail_from', help='Header: The person who sends this.')
+    parser.add_argument('rcpt_to', help='Header: The persons who receive this.')
+    parser.add_argument('date', help='Header: The date and time this was sent.')
+    parser.add_argument('subject', help='Header: The subject of the email.')
+    parser.add_argument('text', help='Payload in text format.')
+    parser.add_argument('html', help='Payload in HTML format.')
 
     @jwt_required
     def get(self):
