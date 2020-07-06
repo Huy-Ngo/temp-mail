@@ -21,18 +21,21 @@ def new_address():
     return address, token
 
 
-def send_mail(recipient, subject='Simple test message', message='This is the body of the message.'):
+def send_mail(recipient, subject='Simple test message',
+              message='Test message\nThis is the body of the message.'):
     # Create the message
     msg = EmailMessage()
     msg['content-type'] = 'text/plain'
     msg.set_content(message)
+    msg.set_payload(message)
+
     html = message.split('\n')
     html = [f'<div>{line}</div>' for line in html]
     html = ''.join(html)
-
     html_msg = EmailMessage()
     html_msg['content-type'] = 'text/html'
     html_msg.set_content(html)
+    html_msg.set_payload(html)
 
     envelope = EmailMessage()
     envelope['content-type'] = 'multipart/alternative'
