@@ -1,4 +1,5 @@
 from http import HTTPStatus
+from email.utils import parsedate_to_datetime
 
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from flask_restful import Resource
@@ -41,6 +42,7 @@ class Mailbox(Resource):
     def post(self):
         """Receive an email and save it to database."""
         data = Mailbox.parser.parse_args()
+        data['date'] = parsedate_to_datetime(data['date'])
         mail = MailModel(**data)
         mail.save_to_db()
         return {
