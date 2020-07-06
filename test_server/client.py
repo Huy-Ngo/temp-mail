@@ -1,6 +1,6 @@
 import smtplib
-import email.utils
-from email.mime.text import MIMEText
+from email.utils import format_datetime, localtime
+from email.message import EmailMessage
 import requests
 from json import dump, load, dumps
 from sys import argv
@@ -21,21 +21,36 @@ def new_address():
     return address, token
 
 
-def send_mail(recipient, subject='Simple test message', message='This is the body of the message.'):
+def send_mail(recipient, subject='Simple test message',
+              message='Test message\nThis is the body of the message.'):
     # Create the message
-    msg = MIMEText(message)
-    msg['To'] = email.utils.formataddr(('Recipient',
-                                        recipient))
-    msg['From'] = email.utils.formataddr(('Author',
-                                          'author@example.com'))
-    msg['Subject'] = subject
+    msg = EmailMessage()
+    msg['content-type'] = 'text/plain'
+    msg.set_content(message)
+    msg.set_payload(message)
+
+    html = message.split('\n')
+    html = [f'<div>{line}</div>' for line in html]
+    html = ''.join(html)
+    html_msg = EmailMessage()
+    html_msg['content-type'] = 'text/html'
+    html_msg.set_content(html)
+    html_msg.set_payload(html)
+
+    envelope = EmailMessage()
+    envelope['content-type'] = 'multipart/alternative'
+    envelope['from'] = 'Foo Bar <foo@bar.com>'
+    envelope['to'] = recipient
+    envelope['date'] = format_datetime(localtime())
+    envelope['subject'] = subject
+    envelope.set_payload([msg, html_msg])
 
     server = smtplib.SMTP('127.0.0.1', 1025)
     server.set_debuglevel(True)  # show communication with the server
     try:
         server.sendmail('author@example.com',
                         [recipient],
-                        msg.as_string())
+                        envelope.as_string())
     finally:
         server.quit()
 

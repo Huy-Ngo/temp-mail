@@ -9,13 +9,15 @@ url = 'http://103.56.158.148:5000/mail/'
 
 
 def send_request(mailfrom, rcpttos, data):
-    if data is bytes:
-        data = data.decode("utf-8")
+    if type(data) == bytes:
+        data = data.decode()
     headers = Parser(policy=default).parsestr(data)
     content = headers.get_payload()
-    if content is list:
+    print('DEBUG:', content)
+    if type(content) == list:
         text = content[0].get_payload()
-        html = content[0].get_payload()
+        html = content[1].get_payload()
+        print('DEBUG:', text, 'END DEBUG')
     else:
         text = content
         html = ''

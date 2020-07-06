@@ -34,7 +34,7 @@ class MailModel(db.Model):
             'headers': {
                 'from': self.mail_from,
                 'to': self.rcpt_to,
-                'date': self.date,
+                'date': self.date.__str__(),
                 'subject': self.subject
             },
             'payload': {
