@@ -5,10 +5,15 @@ import requests
 from json import dump, load, dumps
 from sys import argv
 
+with open('config.json', 'r') as f:
+    data = load(f)
+    host = data['HOST']
+    env = data['ENV']
+
 
 def new_address():
     # Get a new email
-    r = requests.post('http://127.0.0.1:5000/auth/')
+    r = requests.post(f'http://{host}:5000/auth/')
 
     data = r.json()
     print(data)
@@ -45,10 +50,10 @@ def send_mail(recipient, subject='Simple test message',
     envelope['subject'] = subject
     envelope.set_payload([msg, html_msg])
 
-    server = smtplib.SMTP('127.0.0.1', 1025)
+    server = smtplib.SMTP(host, 1025 if env == 'development' else 25)
     server.set_debuglevel(True)  # show communication with the server
     try:
-        server.sendmail('author@example.com',
+        server.sendmail('foo@bar.com',
                         [recipient],
                         envelope.as_string())
     finally:
@@ -56,7 +61,7 @@ def send_mail(recipient, subject='Simple test message',
 
 
 def receive_mail(token):
-    r = requests.get('http://127.0.0.1:5000/mail/',
+    r = requests.get(f'http://{host}:5000/mail/',
                      headers={'Authorization': f'Bearer {token}'})
     return r.json()
 

@@ -16,13 +16,16 @@ def auth():
 def mailbox(address, token):
     url_for('mailbox', address=address, token=token)
     all_mails = receive_mail(token)
+    if 'mails' not in all_mails:
+        return render_template('views/error.html', message=all_mails['msg'])
     return render_template('views/mailbox.html', address=address, token=token, mails=all_mails['mails'])
 
 
 @bp.route('/mail/<address>/<token>/<int:_id>')
 def mail(address, token, _id):
-    all_mails = receive_mail(token)['mails']
-    for email in all_mails:
+    all_mails = receive_mail(token)
+    if 'mails' not in all_mails:
+        return render_template('views/error.html', message=all_mails['msg'])
+    for email in all_mails['mails']:
         if email['id'] == _id and email['recipient'] == address:
             return render_template('views/mail.html', mail=email)
-    flash('Invalid mail ID or unauthorized')
