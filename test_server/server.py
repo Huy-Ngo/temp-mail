@@ -2,11 +2,15 @@ import smtpd
 import asyncore
 import requests
 from threading import Thread
+from json import load
 
-from email.parser import Parser, BytesParser
+from email.parser import Parser
 from email.policy import default
 
-url = 'http://127.0.0.1:5000/mail/'
+with open('../config.json', 'r') as f:
+    host = load(f)['HOST']
+
+url = f'http://{host}:5000/mail/'
 
 
 def send_request(mailfrom, rcpttos, data):
@@ -48,6 +52,6 @@ class CustomSMTPServer(smtpd.SMTPServer):
         return
 
 
-server = CustomSMTPServer(('127.0.0.1', 1025), None)
+server = CustomSMTPServer((host, 1025), None)
 
 asyncore.loop()
