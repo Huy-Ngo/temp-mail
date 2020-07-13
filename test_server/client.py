@@ -9,6 +9,7 @@ with open('config.json', 'r') as f:
     data = load(f)
     host_port = data['HOST_PORT']
     env = data['ENV']
+    host = data['HOST']
 
 
 def new_address():

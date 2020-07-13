@@ -8,7 +8,9 @@ from email.parser import Parser
 from email.policy import default
 
 with open('../config.json', 'r') as f:
-    host_port = load(f)['HOST_PORT']
+    data = load(f)
+    host_port = data['HOST_PORT']
+    host = data['HOST']
 
 url = f'http://{host_port}/mail/'
 
