@@ -1,9 +1,20 @@
-{% extends 'base.html' %}
+{% extends 'views/mail_base.html' %}
 {% block title %} Mail {% endblock %}
-{% block content %}
-    <div class="id"> #{{ mail['id'] }} </div>
-    <div class="from">From: {{ mail['headers']['from'] }}</div>
-    <div class="to">To: {{ mail['headers']['to'] }}</div>
-    <div class="subject">Subject: {{ mail['headers']['subject'] }}</div>
-    <div class="message"> Message: <pre>{{ mail['payload']['text'] }}</pre> </div>
+{% block body %}
+    <a href="{{ url_for('gui.mailbox', address=address, token=token) }}">
+        <button class="indigo btn"> <i class="material-icons"> arrow_back </i> Back </button>
+    </a>
+    <div class="container">
+        <div class="card">
+            <div class="card-content">
+                <div class="id"> #{{ mail['id'] }} <span class="card-title">{{ mail['headers']['subject'] }}</span> </div>
+                <div class="from">From: {{ mail['headers']['from'] }}</div>
+                <div class="to">To: {{ mail['headers']['to'] }}</div>
+                <hr>
+                <div class="content"> {{ mail['payload']['html']|safe }} </div>
+                <hr>
+                <div class="datetime grey-text text-darken-1">Received at: {{ mail['headers']['date'] }}</div>
+            </div>
+        </div>
+    </div>
 {% endblock %}

@@ -14,7 +14,6 @@ def auth():
 
 @bp.route('/mail/<address>/<token>')
 def mailbox(address, token):
-    url_for('mailbox', address=address, token=token)
     all_mails = receive_mail(token)
     if 'mails' not in all_mails:
         return render_template('views/error.html', message=all_mails['msg'])
@@ -28,4 +27,4 @@ def mail(address, token, _id):
         return render_template('views/error.html', message=all_mails['msg'])
     for email in all_mails['mails']:
         if email['id'] == _id and email['recipient'] == address:
-            return render_template('views/mail.html', mail=email)
+            return render_template('views/mail.html', mail=email, address=address, token=token)
