@@ -55,6 +55,6 @@ class CustomSMTPServer(smtpd.SMTPServer):
         return
 
 
-server = CustomSMTPServer((host, 1025), None)
+server = CustomSMTPServer((host, 25), None)
 
 asyncore.loop()
