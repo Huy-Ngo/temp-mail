@@ -28,11 +28,10 @@ class Auth(Resource):
         }, HTTPStatus.OK
 
     def post(self):
-        # Replace abcxyz.com with appropriate host
-        new_address = generate_random_string() + '@abcxyz.com'
+        new_address = generate_random_string() + '@{host}'
         while UserModel.find_by_address(new_address) is not None:
             # There is already an account with this address
-            new_address = generate_random_string() + '@abcxyz.com'
+            new_address = generate_random_string() + '@{host}'
         token = create_access_token(identity=new_address)
         new_user = UserModel(new_address, token)
         new_user.save_to_db()
