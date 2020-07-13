@@ -1,24 +1,33 @@
-{% extends 'base.html' %}
+{% extends 'views/mail_base.html' %}
 {% block title %} Mailbox - {{ address }} {% endblock %}
-{% block content %}
-    <div>Your mail address is: {{ address }}</div>
-    <div>
-        <h1>Mailbox</h1>
+{% block body %}
+    <div class="center-align">
     {% if mails|length > 0 %}
-        You have {{ mails|length }} mail(s):
-        {% for mail in mails %}
-            <a href="{{ url_for('gui.mail', address=address, token=token, _id=mail['id']) }}">
-                <div class="mail">
-                    <div>id: {{ mail['id'] }}</div>
-                    <div>from: {{ mail['headers']['from'] }}</div>
-                    <div>to: {{ mail['headers']['to'] }}</div>
-                    <div>subject: {{ mail['headers']['subject'] }}</div>
-                    <div>date: {{ mail['headers']['date'] }}</div>
-                </div>
-            </a>
-        {% endfor %}
+        You have {{ mails|length }} {% if mails|length == 1 %} mail {% else %} mails{% endif %}:
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>From</th>
+                            <th>Subject</th>
+                            <th>Received at</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for mail in mails %}
+                            <tr onclick="location='{{ url_for('gui.mail', address=address, token=token, _id=mail['id']) }}'"
+                                    class="link">
+                                <td> {{ mail['id'] }} </td>
+                                <td> {{ mail['headers']['from'] }} </td>
+                                <td> {{ mail['headers']['subject'] }} </td>
+                                <td> {{ mail['headers']['date'] }} </td>
+                            </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
     {% else %}
-        <div>Your mailbox is empty</div>
+        <div>Your mailbox is empty.</div>
     {% endif %}
     </div>
 {% endblock %}

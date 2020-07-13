@@ -34,3 +34,12 @@ Run `client.py` to get a new email, send a mail to this server, or read the mail
 ```shell script
 python3 client.py [new/send/read]
 ```
+
+## Configuration
+
+- `SQLALCHEMY_DATABASE_URI`: URI to create database
+- `ENV`: Set to `development` to use another port than 25.
+- `HOST`: The IP of the host
+- `HOST_PORT`: The IP and port of the host
+- If there is a domain name configured for this app, set both above
+ variables to be the same as domain name.

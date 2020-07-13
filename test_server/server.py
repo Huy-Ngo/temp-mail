@@ -8,9 +8,11 @@ from email.parser import Parser
 from email.policy import default
 
 with open('../config.json', 'r') as f:
-    host = load(f)['HOST']
+    data = load(f)
+    host_port = data['HOST_PORT']
+    host = data['HOST']
 
-url = f'http://{host}:5000/mail/'
+url = f'http://{host_port}/mail/'
 
 
 def send_request(mailfrom, rcpttos, data):

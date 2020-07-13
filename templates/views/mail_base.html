@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="center-align">
+        Your mail address is:
+        <a href="mailto:{{ address }}" class="blue-text">{{ address }}</a>
+    </div>
+    {% block body %} {% endblock %}
+{% endblock %}

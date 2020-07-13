@@ -7,13 +7,14 @@ from sys import argv
 
 with open('config.json', 'r') as f:
     data = load(f)
-    host = data['HOST']
+    host_port = data['HOST_PORT']
     env = data['ENV']
+    host = data['HOST']
 
 
 def new_address():
     # Get a new email
-    r = requests.post(f'http://{host}:5000/auth/')
+    r = requests.post(f'http://{host_port}/auth/')
 
     data = r.json()
     print(data)
@@ -61,7 +62,7 @@ def send_mail(recipient, subject='Simple test message',
 
 
 def receive_mail(token):
-    r = requests.get(f'http://{host}:5000/mail/',
+    r = requests.get(f'http://{host_port}/mail/',
                      headers={'Authorization': f'Bearer {token}'})
     return r.json()
 

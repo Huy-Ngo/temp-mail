@@ -1,0 +1,20 @@
+nav {
+    margin-bottom: 50px;
+}
+
+body {
+    font-size: 1.2em;
+}
+
+tr.link {
+    cursor: pointer;
+}
+
+.material-icons{
+    display: inline-flex;
+    vertical-align: top;
+}
+
+div.datetime {
+    font-size: 0.6em;
+}
