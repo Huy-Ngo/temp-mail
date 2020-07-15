@@ -20,7 +20,7 @@
                                     class="link {{ 'read' if mail['is_read'] else 'unread orange-text text-darken-4' }}">
                                 <td> {{ mail['id'] }} </td>
                                 <td> {{ mail['headers']['from'] }} </td>
-                                <td> {{ mail['headers']['subject'] }} </td>
+                                <td> {{ mail['headers']['subject'] }} <span class="new badge red" data-badge-caption="unread"></span> </td>
                                 <td> {{ mail['headers']['date'] }} </td>
                             </tr>
                     {% endfor %}
