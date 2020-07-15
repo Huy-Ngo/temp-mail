@@ -18,3 +18,7 @@ tr.link {
 div.datetime {
     font-size: 0.6em;
 }
+
+.unread {
+    font-weight: bolder;
+}
