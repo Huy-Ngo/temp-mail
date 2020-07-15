@@ -1,7 +1,16 @@
+from requests import get, post
+from json import load, dumps
+
 from flask import Blueprint, flash, request, render_template, redirect, url_for
-from test_server.client import new_address, send_mail, receive_mail
+from test_server.client import new_address
 
 bp = Blueprint('gui', __name__, url_prefix='')
+
+with open('config.json', 'r') as f:
+    data = load(f)
+    host_port = data['HOST_PORT']
+    env = data['ENV']
+    host = data['HOST']
 
 
 @bp.route('/', methods=['GET', 'POST'])
@@ -14,7 +23,8 @@ def auth():
 
 @bp.route('/<address>/<token>')
 def mailbox(address, token):
-    all_mails = receive_mail(token)
+    all_mails = get(f'http://{host_port}/mail/',
+                    headers={'Authorization': f'Bearer {token}'}).json()
     if 'mails' not in all_mails:
         return render_template('views/error.html', message=all_mails['message'])
     return render_template('views/mailbox.html', address=address, token=token, mails=all_mails['mails'])
@@ -22,9 +32,7 @@ def mailbox(address, token):
 
 @bp.route('/<address>/<token>/<int:_id>')
 def mail(address, token, _id):
-    all_mails = receive_mail(token)
-    if 'mails' not in all_mails:
-        return render_template('views/error.html', message=all_mails['message'])
-    for email in all_mails['mails']:
-        if email['id'] == _id and email['recipient'] == address:
-            return render_template('views/mail.html', mail=email, address=address, token=token)
+    email = get(f'http://{host_port}/mail/{_id}',
+                headers={'Authorization': f'Bearer {token}'}).json()
+    print(dumps(email, indent=2))
+    return render_template('views/mail.html', mail=email['mail'], address=address, token=token)

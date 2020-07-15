@@ -17,7 +17,7 @@
                     <tbody>
                     {% for mail in mails %}
                             <tr onclick="location='{{ url_for('gui.mail', address=address, token=token, _id=mail['id']) }}'"
-                                    class="link">
+                                    class="link {{ 'read' if mail['is_read'] else 'unread orange-text text-darken-4' }}">
                                 <td> {{ mail['id'] }} </td>
                                 <td> {{ mail['headers']['from'] }} </td>
                                 <td> {{ mail['headers']['subject'] }} </td>
