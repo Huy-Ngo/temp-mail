@@ -17,5 +17,6 @@ build/
 
 *.json
 
+log.txt
 *.xml
 *.iml
