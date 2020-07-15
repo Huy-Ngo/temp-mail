@@ -22,9 +22,9 @@
                                 <td> {{ mail['headers']['from'] }} </td>
                                 <td> {{ mail['headers']['subject'] }}
                                     {% if mail['is_read'] %}
-                                        <span class="new badge green" data-badge-caption="read"></span>
+                                        <span class="new badge green right" data-badge-caption="read"></span>
                                     {% else %}
-                                        <span class="new badge red" data-badge-caption="unread"></span>
+                                        <span class="new badge red right" data-badge-caption="unread"></span>
                                     {% endif %}
                                 </td>
                                 <td> {{ mail['headers']['date'] }} </td>
