@@ -4,10 +4,12 @@ import requests
 from threading import Thread
 from json import load
 
+from quopri import decodestring
+
 from email.parser import Parser
 from email.policy import default
 
-with open('../config.json', 'r') as f:
+with open('/var/www/temp-mail/config.json', 'r') as f:
     data = load(f)
     host_port = data['HOST_PORT']
     host = data['HOST']
@@ -20,11 +22,10 @@ def send_request(mailfrom, rcpttos, data):
         data = data.decode()
     headers = Parser(policy=default).parsestr(data)
     content = headers.get_payload()
-    print('DEBUG:', content)
     if type(content) == list:
         text = content[0].get_payload()
         html = content[1].get_payload()
-        print('DEBUG:', text, 'END DEBUG')
+        html = decodestring(html).decode()
     else:
         text = content
         html = ''
