@@ -16,6 +16,9 @@ class MailModel(db.Model):
     text = db.Column(db.String)
     html = db.Column(db.String)
 
+    # status check
+    is_read = db.Column(db.Boolean, default=False)
+
     def __init__(self, sender, recipient, mail_from, rcpt_to, date, subject, text, html):
         self.sender = sender
         self.recipient = recipient
@@ -25,6 +28,7 @@ class MailModel(db.Model):
         self.subject = subject
         self.text = text
         self.html = html
+        self.is_read = False
 
     def json(self):
         return {
@@ -40,7 +44,8 @@ class MailModel(db.Model):
             'payload': {
                 'text': self.text,
                 'html': self.html
-            }
+            },
+            'is_read': self.is_read
         }
 
     @classmethod
@@ -56,5 +61,11 @@ class MailModel(db.Model):
         return cls.query.filter_by(id=_id).first()
 
     def save_to_db(self):
+        db.session.add(self)
+        db.session.commit()
+
+    def set_read(self):
+        """Set the email as read."""
+        self.is_read = True
         db.session.add(self)
         db.session.commit()

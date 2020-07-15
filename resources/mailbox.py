@@ -66,4 +66,6 @@ class Mail(Resource):
             return {
                 'message': 'You are unauthorized to read this message.'
             }, HTTPStatus.UNAUTHORIZED
+        mail.set_read()
+
         return {'mail': mail.json()}, HTTPStatus.OK
