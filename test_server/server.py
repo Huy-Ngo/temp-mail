@@ -29,7 +29,6 @@ def send_request(mailfrom, rcpttos, data):
     else:
         text = content
         html = ''
-    print(headers)
     requests.post(url, {
             'sender': mailfrom,
             'recipient': rcpttos[0],
