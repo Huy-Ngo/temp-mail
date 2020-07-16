@@ -3,8 +3,9 @@ from json import load, dumps
 
 from flask import Blueprint, flash, request, render_template, redirect, url_for
 from test_server.client import new_address
+from flask_jwt_extended import set_access_cookies, get_raw_jwt, jwt_required, get_jti
 
-bp = Blueprint('gui', __name__, url_prefix='/gui')
+bp = Blueprint('gui', __name__, url_prefix='/')
 with open('config.json', 'r') as f:
     data = load(f)
     host_port = data['HOST_PORT']
@@ -12,16 +13,19 @@ with open('config.json', 'r') as f:
     host = data['HOST']
 
 
-@bp.route('/auth', methods=['GET', 'POST'])
+@bp.route('/', methods=['GET', 'POST'])
 def auth():
     if request.method == 'POST':
         address, token = new_address()
-        return redirect(url_for('.mailbox', address=address, token=token))
+        response = redirect(url_for('.mailbox', address=address, token=token))
+        set_access_cookies(response, token)
+        return response
     return render_template('views/auth.html')
 
 
-@bp.route('/mail/<address>/<token>')
-def mailbox(address, token):
+@bp.route('/<address>')
+def mailbox(address):
+    token = request.cookies.get('access_token_cookie')
     all_mails = get(f'http://{host_port}/mail/',
                     headers={'Authorization': f'Bearer {token}'}).json()
     if 'mails' not in all_mails:
@@ -31,9 +35,9 @@ def mailbox(address, token):
     return render_template('views/mailbox.html', address=address, token=token, mails=mails)
 
 
-@bp.route('/mail/<address>/<token>/<int:_id>')
-def mail(address, token, _id):
+@bp.route('/<address>/<int:_id>')
+def mail(address, _id):
+    token = request.cookies.get('access_token_cookie')
     email = get(f'http://{host_port}/mail/{_id}',
                 headers={'Authorization': f'Bearer {token}'}).json()
-    print(dumps(email, indent=2))
     return render_template('views/mail.html', mail=email['mail'], address=address, token=token)
