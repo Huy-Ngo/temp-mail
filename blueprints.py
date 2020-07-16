@@ -17,7 +17,7 @@ with open('config.json', 'r') as f:
 def auth():
     if request.method == 'POST':
         address, token = new_address()
-        response = redirect(url_for('.mailbox', address=address, token=token))
+        response = redirect(url_for('.mailbox', address=address))
         set_access_cookies(response, token)
         return response
     return render_template('views/auth.html')
@@ -32,7 +32,7 @@ def mailbox(address):
         return render_template('views/error.html', message=all_mails['msg'])
     mails = all_mails['mails']
     mails = sorted(mails, reverse=True, key=lambda m: m['id'])
-    return render_template('views/mailbox.html', address=address, token=token, mails=mails)
+    return render_template('views/mailbox.html', address=address, mails=mails)
 
 
 @bp.route('/<address>/<int:_id>')
@@ -40,4 +40,4 @@ def mail(address, _id):
     token = request.cookies.get('access_token_cookie')
     email = get(f'http://{host_port}/api/mail/{_id}',
                 headers={'Authorization': f'Bearer {token}'}).json()
-    return render_template('views/mail.html', mail=email['mail'], address=address, token=token)
+    return render_template('views/mail.html', mail=email['mail'], address=address)
