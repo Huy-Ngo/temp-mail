@@ -26,7 +26,7 @@ def auth():
 @bp.route('/<address>')
 def mailbox(address):
     token = request.cookies.get('access_token_cookie')
-    all_mails = get(f'http://{host_port}/mail/',
+    all_mails = get(f'http://{host_port}/api/mail/',
                     headers={'Authorization': f'Bearer {token}'}).json()
     if 'mails' not in all_mails:
         return render_template('views/error.html', message=all_mails['msg'])
@@ -38,6 +38,6 @@ def mailbox(address):
 @bp.route('/<address>/<int:_id>')
 def mail(address, _id):
     token = request.cookies.get('access_token_cookie')
-    email = get(f'http://{host_port}/mail/{_id}',
+    email = get(f'http://{host_port}/api/mail/{_id}',
                 headers={'Authorization': f'Bearer {token}'}).json()
     return render_template('views/mail.html', mail=email['mail'], address=address, token=token)

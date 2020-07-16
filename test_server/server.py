@@ -9,12 +9,12 @@ from quopri import decodestring
 from email.parser import Parser
 from email.policy import default
 
-with open('/var/www/temp-mail/config.json', 'r') as f:
+with open('config.json', 'r') as f:
     data = load(f)
     host_port = data['HOST_PORT']
     host = data['HOST']
 
-url = f'http://{host_port}/mail/'
+url = f'http://{host_port}/api/mail/'
 
 
 def send_request(mailfrom, rcpttos, data):

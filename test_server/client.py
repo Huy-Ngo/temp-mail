@@ -14,7 +14,7 @@ with open('config.json', 'r') as f:
 
 def new_address():
     # Get a new email
-    r = requests.post(f'http://{host_port}/auth/')
+    r = requests.post(f'http://{host_port}/api/auth/')
 
     data = r.json()
     print(data)
@@ -62,7 +62,7 @@ def send_mail(recipient, subject='Simple test message',
 
 
 def receive_mail(token):
-    r = requests.get(f'http://{host_port}/mail/',
+    r = requests.get(f'http://{host_port}/api/mail/',
                      headers={'Authorization': f'Bearer {token}'})
     return r.json()
 

@@ -13,9 +13,9 @@ api = Api(app)
 jwt = JWTManager(app)
 db.init_app(app)
 
-api.add_resource(Mailbox, '/mail/')
-api.add_resource(Mail, '/mail/<int:_id>')
-api.add_resource(Auth, '/auth/')
+api.add_resource(Mailbox, '/api/mail/')
+api.add_resource(Mail, '/api/mail/<int:_id>')
+api.add_resource(Auth, '/api/auth/')
 
 app.register_blueprint(bp)
 
