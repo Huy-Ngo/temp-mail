@@ -1,10 +1,10 @@
 {% extends 'views/mail_base.html' %}
 {% block title %} Mail {% endblock %}
 {% block body %}
-    <a href="{{ url_for('gui.mailbox', address=address, token=token) }}">
-        <button class="indigo btn"> <i class="material-icons"> arrow_back </i> Back </button>
-    </a>
     <div class="container">
+        <a href="{{ url_for('gui.mailbox', address=address, token=token) }}">
+            <button class="indigo btn"> <i class="material-icons"> arrow_back </i> Back </button>
+        </a>
         <div class="card">
             <div class="card-content">
                 <div class="id"> #{{ mail['id'] }} <span class="card-title">{{ mail['headers']['subject'] }}</span> </div>
