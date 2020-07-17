@@ -37,7 +37,9 @@ class Mailbox(Resource):
             return {
                 'message': 'No mails found.',
             }, HTTPStatus.NOT_FOUND
-        return {'mails': [mail.json() for mail in mails], 'address': address}, HTTPStatus.OK
+        return {'mails': [mail.json() for mail in mails],
+                'address': address,
+                'message': 'OK'}, HTTPStatus.OK
 
     def post(self):
         """Receive an email and save it to database."""
@@ -45,10 +47,8 @@ class Mailbox(Resource):
         data['date'] = parsedate_to_datetime(data['date'])
         mail = MailModel(**data)
         mail.save_to_db()
-        return {
-            'message': 'Delivered mail successfully',
-            'mail': mail.json()
-        }, HTTPStatus.CREATED
+        return {'message': 'Delivered mail successfully',
+                'mail': mail.json()}, HTTPStatus.CREATED
 
 
 class Mail(Resource):
@@ -68,4 +68,6 @@ class Mail(Resource):
             }, HTTPStatus.UNAUTHORIZED
         mail.set_read()
 
-        return {'mail': mail.json(), 'address': address}, HTTPStatus.OK
+        return {'mail': mail.json(),
+                'address': address,
+                'message': 'OK'}, HTTPStatus.OK

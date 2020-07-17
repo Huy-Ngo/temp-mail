@@ -29,7 +29,8 @@ class Auth(Resource):
         for mail in mails:
             mail.check_validity()
         return {
-            'mails': [mail.json() for mail in mails]
+            'mails': [mail.json() for mail in mails],
+            'message': 'OK'
         }, HTTPStatus.OK
 
     def post(self):
@@ -42,4 +43,5 @@ class Auth(Resource):
         new_user.save_to_db()
         return {
             'account': new_user.json(),
+            'message': 'A temporary mail created'
         }, HTTPStatus.CREATED

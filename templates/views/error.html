@@ -3,7 +3,12 @@
     Some error happened
 {% endblock %}
 {% block content %}
-    <div class="error-message">
+    <div class="center-align" id="error-message">
     {{ message }}
+    </div>
+    <div class="center-align">
+        <a href="/">
+            <button class="waves-effect waves-light indigo darken-1 btn">Go home</button>
+        </a>
     </div>
 {% endblock %}

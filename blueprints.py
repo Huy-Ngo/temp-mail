@@ -28,8 +28,11 @@ def mailbox():
     token = request.cookies.get('access_token_cookie')
     all_mails = get(f'http://{host_port}/api/mail/',
                     headers={'Authorization': f'Bearer {token}'}).json()
-    if 'mails' not in all_mails:
-        return render_template('views/error.html', message=all_mails['message'])
+    if 'mails' not in all_mails or 'address' not in all_mails:
+        message = all_mails['message']
+        if message == 'Token has expired':
+            message = 'Your email has expired. Please make a new one.'
+        return render_template('views/error.html', message=message)
     mails = all_mails['mails']
     address = all_mails['address']
     mails = sorted(mails, reverse=True, key=lambda m: m['id'])
@@ -41,4 +44,9 @@ def mail(_id):
     token = request.cookies.get('access_token_cookie')
     email = get(f'http://{host_port}/api/mail/{_id}',
                 headers={'Authorization': f'Bearer {token}'}).json()
+    if 'mail' not in email or 'address' not in email:
+        message = email['message']
+        if message == 'Token has expired':
+            message = 'Your email has expired. Please make a new one.'
+        return render_template('views/error.html', message=message)
     return render_template('views/mail.html', mail=email['mail'], address=email['address'])
