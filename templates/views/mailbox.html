@@ -1,5 +1,8 @@
 {% extends 'views/mail_base.html' %}
 {% block title %} Mailbox - {{ address }} {% endblock %}
+{% block refresh %}
+    <meta http-equiv="refresh" content="10"/>
+{% endblock %}
 {% block body %}
     <div class="center-align container">
     {% if mails|length > 0 %}
