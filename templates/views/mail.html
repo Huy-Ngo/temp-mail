@@ -2,7 +2,7 @@
 {% block title %} Mail {% endblock %}
 {% block body %}
     <div class="container">
-        <a href="{{ url_for('gui.mailbox', address=address, token=token) }}">
+        <a href="{{ url_for('gui.mailbox', address=address) }}">
             <button class="indigo btn"> <i class="material-icons"> arrow_back </i> Back </button>
         </a>
         <div class="card">
