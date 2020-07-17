@@ -37,7 +37,7 @@ class Mailbox(Resource):
             return {
                 'message': 'No mails found.',
             }, HTTPStatus.NOT_FOUND
-        return {'mails': [mail.json() for mail in mails]}, HTTPStatus.OK
+        return {'mails': [mail.json() for mail in mails], 'address': address}, HTTPStatus.OK
 
     def post(self):
         """Receive an email and save it to database."""
@@ -56,16 +56,16 @@ class Mail(Resource):
     def get(self, _id):
         """Display content of a mail."""
         mail = MailModel.fetch_by_id(_id)
-        user = get_jwt_identity()
+        address = get_jwt_identity()
         if mail is None:
             return {
                 'message': f'No mail with id {_id} found'
             }, HTTPStatus.NOT_FOUND
         recipient = mail.json()['recipient']
-        if recipient != user:
+        if recipient != address:
             return {
                 'message': 'You are unauthorized to read this message.'
             }, HTTPStatus.UNAUTHORIZED
         mail.set_read()
 
-        return {'mail': mail.json()}, HTTPStatus.OK
+        return {'mail': mail.json(), 'address': address}, HTTPStatus.OK
