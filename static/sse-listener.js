@@ -31,6 +31,9 @@ eventSource.onmessage = function(e) {
         lineNode.appendChild(subjectNode);
         lineNode.appendChild(dateNode);
         lineNode.className = isRead ? 'read' : 'unread orange-text text-darken-4';
+        lineNode.addEventListener('click', function () {
+            window.location.href = '/mail/' + mail['id'];
+        })
 
         mailbox.prepend(lineNode);
     }
