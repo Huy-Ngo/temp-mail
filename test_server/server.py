@@ -22,9 +22,14 @@ def send_request(mailfrom, rcpttos, data):
         data = data.decode()
     headers = Parser(policy=default).parsestr(data)
     content = headers.get_payload()
+    text = ''
+    html = ''
     if type(content) == list:
-        text = content[0].get_payload()
-        html = content[1].get_payload()
+        for part in content:
+            if part['content-type'] == 'text/plain':
+                text = part.get_payload()
+            elif part['content-type'] == 'text/html':
+                html = part.get_payload()
         html = decodestring(html).decode()
     else:
         text = content
