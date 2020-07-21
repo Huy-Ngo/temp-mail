@@ -35,6 +35,6 @@ eventSource.onmessage = function(e) {
         lineNode.appendChild(dateNode);
         lineNode.className = isRead ? 'read' : 'unread orange-text text-darken-4';
 
-        mailbox.appendChild(lineNode);
+        mailbox.prepend(lineNode);
     }
 };
