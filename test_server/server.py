@@ -26,9 +26,9 @@ def send_request(mailfrom, rcpttos, data):
     html = ''
     if type(content) == list:
         for part in content:
-            if part['content-type'] == 'text/plain':
+            if 'text/plain' in part['content-type']:
                 text = part.get_payload()
-            elif part['content-type'] == 'text/html':
+            elif 'text/html' in part['content-type']:
                 html = part.get_payload()
         html = decodestring(html).decode()
     else:
