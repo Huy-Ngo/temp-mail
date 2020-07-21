@@ -19,6 +19,21 @@
             </tr>
         </thead>
         <tbody id="mailbox-body">
+        {% for mail in mails %}
+            <tr onclick="location='{{ url_for('gui.mail', _id=mail['id']) }}'"
+                    class="link {{ 'read' if mail['is_read'] else 'unread orange-text text-darken-4' }}">
+                <td> {{ mail['id'] }} </td>
+                <td> {{ mail['headers']['from'] }} </td>
+                <td> {{ mail['headers']['subject'] }}
+                    {% if mail['is_read'] %}
+                        <span class="new badge green right" data-badge-caption="read"></span>
+                    {% else %}
+                        <span class="new badge red right" data-badge-caption="unread"></span>
+                    {% endif %}
+                </td>
+                <td> {{ mail['headers']['date'] }} </td>
+            </tr>
+        {% endfor %}
         </tbody>
     </table>
     </div>
