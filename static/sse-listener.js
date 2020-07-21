@@ -3,11 +3,8 @@ const eventSource = new EventSource("/mail/stream");
 
 eventSource.onmessage = function(e) {
     const mails  = JSON.parse(e.data);
-    if (mails.length === 0) {
-        return
-    }
+    mailbox.innerHTML = '';
     for (let mail of mails) {
-        console.log(mail)
         const isRead = mail['is_read'];
         const lineNode = document.createElement('tr')
         const fromNode = document.createElement('td');
@@ -18,7 +15,7 @@ eventSource.onmessage = function(e) {
         textNode = document.createTextNode(mail.headers.from);
         fromNode.appendChild(textNode);
 
-        textNode = document.createTextNode(mail.headers.from);
+        textNode = document.createTextNode(mail.headers['subject']);
         subjectNode.appendChild(textNode);
         if (!isRead) {
             const span = document.createElement('span');
@@ -27,7 +24,7 @@ eventSource.onmessage = function(e) {
             subjectNode.appendChild(span);
         }
 
-        textNode = document.createTextNode(mail.headers.from);
+        textNode = document.createTextNode(mail.headers['date']);
         dateNode.appendChild(textNode);
 
         lineNode.appendChild(fromNode);

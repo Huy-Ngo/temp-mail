@@ -60,7 +60,7 @@ def mail_stream():
     def event_stream():
         while True:
             # wait for source data to be available, then push it
-            yield 'data: {}\n\n'.format(fetch_mail(token))
+            yield f'data: {fetch_mail(token)}\n\n'
 
     return Response(event_stream(), mimetype="text/event-stream")
 
