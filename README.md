@@ -25,15 +25,10 @@ flask run
 Next, run the SMTP server:
 
 ```shell script
-cd test_server
 python3 server.py
 ```
 
-Run `client.py` to get a new email, send a mail to this server, or read the mails.
-
-```shell script
-python3 client.py [new/send/read]
-```
+You can try sending to a localhost mail server with python's [smtplib][1].
 
 ## Configuration
 
@@ -43,3 +38,5 @@ python3 client.py [new/send/read]
 - `HOST_PORT`: The IP and port of the host
 - If there is a domain name configured for this app, set both above
  variables to be the same as domain name.
+ 
+[1]: https://docs.python.org/3/library/smtplib.html 
