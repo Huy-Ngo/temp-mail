@@ -13,6 +13,7 @@ with open('config.json', 'r') as f:
     data = load(f)
     host_port = data['HOST_PORT']
     host = data['HOST']
+    env = data['ENV']
 
 url = f'http://{host_port}/api/mail/'
 
@@ -84,6 +85,6 @@ class CustomSMTPServer(smtpd.SMTPServer):
         return
 
 
-server = CustomSMTPServer((host, 1025), None)
+server = CustomSMTPServer((host, 1025 if env == 'development' else 25), None)
 
 asyncore.loop()
