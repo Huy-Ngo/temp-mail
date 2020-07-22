@@ -85,6 +85,7 @@ class CustomSMTPServer(smtpd.SMTPServer):
         return
 
 
-server = CustomSMTPServer((host, 1025 if env == 'development' else 25), None)
+if __name__ == '__main__':
+    server = CustomSMTPServer((host, 1025 if env == 'development' else 25), None)
 
-asyncore.loop()
+    asyncore.loop()
