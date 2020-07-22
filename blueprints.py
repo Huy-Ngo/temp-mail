@@ -3,7 +3,6 @@ from json import load, dumps
 from time import sleep
 
 from flask import Blueprint, Response, request, render_template, redirect, url_for
-from test_server.client import new_address
 from flask_jwt_extended import set_access_cookies
 
 bp = Blueprint('gui', __name__, url_prefix='/')
@@ -30,7 +29,9 @@ def fetch_mail(token):
 @bp.route('/', methods=['GET', 'POST'])
 def auth():
     if request.method == 'POST':
-        address, token = new_address()
+        account_info = post(f'http://{host_port}/api/auth/').json()
+
+        token = account_info['account']['token']
         response = redirect(url_for('.mailbox'))
         set_access_cookies(response, token)
         return response
