@@ -57,7 +57,8 @@ def send_request(mailfrom, rcpttos, mime_data):
     text = parsed_data['text/plain']
     html = parsed_data['text/html']
     html = decodestring(html).decode()
-    html = replace_image(html, parsed_data['images'])
+    if 'images' in parsed_data:
+        html = replace_image(html, parsed_data['images'])
     requests.post(url, {
             'sender': mailfrom,
             'recipient': rcpttos[0],
