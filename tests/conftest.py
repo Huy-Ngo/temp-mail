@@ -30,4 +30,19 @@ def expected_text_plain():
 def raw_image_mail():
     """MIME data received from a mail with an image sent from Gmail."""
     global data
-    return data['raw-image-mime']
+    return data['image-mail']['raw']
+
+
+@fixture
+def expected_text_html_image():
+    """Expected HTML representation of a mail (before quopri decode)."""
+    global data
+    return data['image-mail']['expected-html']
+
+
+@fixture
+def expected_text_plain_image():
+    """Expected plain text of a mail."""
+    global data
+    return data['image-mail']['expected-plain']
+
