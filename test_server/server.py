@@ -22,10 +22,7 @@ def parse_payload_tree(mime_data):
 
     For now, the payloads returned are only text/plain and text/html.
     """
-    flat_data = {
-        'text/plain': '',
-        'text/html': ''
-    }
+    flat_data = {}
     if 'text/plain' in mime_data['content-type']:
         flat_data['text/plain'] = mime_data.get_payload()
     elif 'text/html' in mime_data['content-type']:
