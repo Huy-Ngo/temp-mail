@@ -27,11 +27,24 @@ def parse_payload_tree(mime_data):
         flat_data['text/plain'] = mime_data.get_payload()
     elif 'text/html' in mime_data['content-type']:
         flat_data['text/html'] = mime_data.get_payload()
+    elif 'image' in mime_data['content-type']:
+        cid = mime_data['cid']
+        image_data = mime_data.get_payload()
+        if 'images' not in flat_data:
+            flat_data['images'] = []
+        flat_data['images'][cid] = image_data
     elif 'multipart' in mime_data['content-type']:
         payload_list = mime_data.get_payload()
         for payload in payload_list:
             flat_data.update(parse_payload_tree(payload))
     return flat_data
+
+
+def replace_image(html: str, images: dict):
+    """Take a HTML code that uses CID and replace it with the base64 encoded image."""
+    for cid in images:
+        image_data = images[cid]
+        html.replace(f'cid:{cid}', f'data:image/jpeg;base64,{image_data}')
 
 
 def send_request(mailfrom, rcpttos, mime_data):
