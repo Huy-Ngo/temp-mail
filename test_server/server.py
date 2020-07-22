@@ -45,6 +45,7 @@ def send_request(mailfrom, rcpttos, mime_data):
     print(parsed_data)
     text = parsed_data['text/plain']
     html = parsed_data['text/html']
+    html = decodestring(html).decode()
     requests.post(url, {
             'sender': mailfrom,
             'recipient': rcpttos[0],
