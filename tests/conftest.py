@@ -1,3 +1,5 @@
+#fl  Copyright (c) 2020  Ngô Ngọc Đức Huy
+
 from pytest import fixture
 from json import load
 
@@ -46,3 +48,14 @@ def expected_text_plain_image():
     global data
     return data['image-mail']['expected-plain']
 
+
+@fixture
+def expected_images():
+    global data
+    return data['image-mail']['expected-images']
+
+
+@fixture
+def expected_replaced_html():
+    global data
+    return data['image-mail']['expected-replaced-html']
