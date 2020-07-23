@@ -1,10 +1,15 @@
+#  Copyright (c) 2020  Ngô Ngọc Đức Huy
+
 from db import db
 
 
 class MailModel(db.Model):
+    """Model for representing and storing mails."""
     id = db.Column(db.Integer, primary_key=True)
     sender = db.Column(db.String(254))
-    recipient = db.Column(db.String(254), db.ForeignKey('user_model.email_address'), nullable=False)
+    recipient = db.Column(db.String(254),
+                          db.ForeignKey('user_model.email_address'),
+                          nullable=False)
 
     # headers
     mail_from = db.Column(db.String(300))
@@ -19,7 +24,8 @@ class MailModel(db.Model):
     # status check
     is_read = db.Column(db.Boolean, default=False)
 
-    def __init__(self, sender, recipient, mail_from, rcpt_to, date, subject, text, html):
+    def __init__(self, sender, recipient, mail_from,
+                 rcpt_to, date, subject, text, html):
         self.sender = sender
         self.recipient = recipient
         self.mail_from = mail_from
@@ -30,7 +36,8 @@ class MailModel(db.Model):
         self.html = html
         self.is_read = False
 
-    def json(self):
+    def json(self) -> dict:
+        """Return the information of the object as a JSON"""
         return {
             'id': self.id,
             'sender': self.sender,
@@ -49,18 +56,17 @@ class MailModel(db.Model):
         }
 
     @classmethod
-    def fetch_all(cls):
-        return cls.query.all()
-
-    @classmethod
-    def fetch_by_address(cls, address):
+    def fetch_by_address(cls, address: str):
+        """Get all the mails sent to the address."""
         return cls.query.filter_by(recipient=address).all()
 
     @classmethod
-    def fetch_by_id(cls, _id):
+    def fetch_by_id(cls, _id: int):
+        """Get the email that has a specific ID."""
         return cls.query.filter_by(id=_id).first()
 
     def save_to_db(self):
+        """Save the email to database."""
         db.session.add(self)
         db.session.commit()
 

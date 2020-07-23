@@ -1,3 +1,5 @@
+#  Copyright (c) 2020  Ngô Ngọc Đức Huy
+
 from string import digits, ascii_lowercase
 from random import choice
 from http import HTTPStatus
@@ -14,6 +16,7 @@ with open('config.json', 'r') as f:
 
 
 def generate_random_string():
+    """Create a random string with 8 letters for users."""
     letters = ascii_lowercase + digits
     return ''.join(choice(letters) for i in range(8))
 
@@ -21,6 +24,7 @@ def generate_random_string():
 class Auth(Resource):
     """API Resource for getting a new mail address."""
     def post(self):
+        """Create a new email address"""
         new_address = generate_random_string() + f'@{host}'
         while UserModel.find_by_address(new_address) is not None:
             # There is already an account with this address

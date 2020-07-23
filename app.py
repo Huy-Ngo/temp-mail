@@ -22,6 +22,7 @@ app.register_blueprint(bp)
 
 @app.before_first_request
 def create_database():
+    """Create database on first request."""
     db.create_all()
 
 

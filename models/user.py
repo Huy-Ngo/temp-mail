@@ -1,9 +1,12 @@
+#  Copyright (c) 2020  Ngô Ngọc Đức Huy
+
 from datetime import datetime, timedelta
 
 from db import db
 
 
 class UserModel(db.Model):
+    """Model for representing and storing addresses."""
     id = db.Column(db.Integer, primary_key=True)
     email_address = db.Column(db.String(254))
     token = db.Column(db.String(256))
@@ -11,12 +14,13 @@ class UserModel(db.Model):
     create_at = db.Column(db.DateTime, default=datetime.utcnow)
     mails = db.relationship('MailModel', backref='user', lazy=True)
 
-    def __init__(self, email_address, token):
+    def __init__(self, email_address: str, token: str):
         self.email_address = email_address
         self.token = token
         self.is_expired = False
 
     def json(self):
+        """Return the information of the object as a JSON"""
         return {
             'id': self.id,
             'email_address': self.email_address,
@@ -26,16 +30,9 @@ class UserModel(db.Model):
         }
 
     @classmethod
-    def find_by_address(cls, address):
+    def find_by_address(cls, address: str):
+        """Find the object representing the address."""
         return cls.query.filter_by(email_address=address).first()
-
-    @classmethod
-    def find_by_id(cls, _id):
-        return cls.query.filter_by(id=_id).first()
-
-    @classmethod
-    def fetch_all(cls):
-        return cls.query.all()
 
     def check_validity(self):
         """Check if the token is still valid.
@@ -51,5 +48,6 @@ class UserModel(db.Model):
         return is_valid
 
     def save_to_db(self):
+        """Save the email address to database."""
         db.session.add(self)
         db.session.commit()

@@ -1,3 +1,5 @@
+#  Copyright (c) 2020  Ngô Ngọc Đức Huy
+
 from http import HTTPStatus
 from email.utils import parsedate_to_datetime
 
@@ -9,6 +11,7 @@ from models import UserModel, MailModel
 
 
 class Mailbox(Resource):
+    """API resources for listing mails."""
     parser = RequestParser()
     parser.add_argument('sender', help='The address of the sender.')
     parser.add_argument('recipient', help='The address that receives this email.')
@@ -47,14 +50,17 @@ class Mailbox(Resource):
         data['date'] = parsedate_to_datetime(data['date'])
         mail = MailModel(**data)
         mail.save_to_db()
-        return {'message': 'Delivered mail successfully',
-                'mail': mail.json()}, HTTPStatus.CREATED
+        return {
+            'message': 'Delivered mail successfully',
+            'mail': mail.json()
+        }, HTTPStatus.CREATED
 
 
 class Mail(Resource):
+    """API resources for mail details."""
     @jwt_required
     def get(self, _id):
-        """Display content of a mail."""
+        """Return content of a mail."""
         mail = MailModel.fetch_by_id(_id)
         address = get_jwt_identity()
         if mail is None:
@@ -68,6 +74,8 @@ class Mail(Resource):
             }, HTTPStatus.UNAUTHORIZED
         mail.set_read()
 
-        return {'mail': mail.json(),
-                'address': address,
-                'message': 'OK'}, HTTPStatus.OK
+        return {
+           'mail': mail.json(),
+           'address': address,
+           'message': 'OK'
+        }, HTTPStatus.OK
