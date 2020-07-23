@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2020  Ngô Ngọc Đức Huy
+ */
+
 const mailbox = document.getElementById("mailbox-body");
 const eventSource = new EventSource("/mail/stream");
 

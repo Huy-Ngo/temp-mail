@@ -40,9 +40,11 @@ class Mailbox(Resource):
             return {
                 'message': 'No mails found.',
             }, HTTPStatus.NOT_FOUND
-        return {'mails': [mail.json() for mail in mails],
-                'address': address,
-                'message': 'OK'}, HTTPStatus.OK
+        return {
+            'mails': [mail.json() for mail in mails],
+            'address': address,
+            'message': 'OK'
+        }, HTTPStatus.OK
 
     def post(self):
         """Receive an email and save it to database."""

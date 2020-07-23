@@ -23,14 +23,19 @@ def generate_random_string():
 
 class Auth(Resource):
     """API Resource for getting a new mail address."""
-    def post(self):
+    def post(self, address=None):
         """Create a new email address"""
-        new_address = generate_random_string() + f'@{host}'
-        while UserModel.find_by_address(new_address) is not None:
-            # There is already an account with this address
-            new_address = generate_random_string() + f'@{host}'
-        token = create_access_token(identity=new_address)
-        new_user = UserModel(new_address, token)
+        if address is None:
+            address = f'{generate_random_string()}@{host}'
+            while UserModel.find_by_address(address) is not None:
+                address = f'{generate_random_string()}@{host}'
+        else:
+            if UserModel.find_by_address(address) is not None:
+                return {
+                    'message': 'Failed to create an email address'
+                }, HTTPStatus.BAD_REQUEST
+        token = create_access_token(identity=address)
+        new_user = UserModel(address, token)
         new_user.save_to_db()
         return {
             'account': new_user.json(),
