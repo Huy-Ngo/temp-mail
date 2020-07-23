@@ -19,6 +19,11 @@ jobs:
         python-version: [3.5, 3.6, 3.7, 3.8]
     steps:
       - uses: actions/checkout@v1
+      - name: Create config
+        run: |
+          printf "{\n\"ENV\": \"development\",\n" > config.json
+          printf "\"SECRET_KEY\": \"dev\",\n" >> config.json
+          printf "\"HOST_PORT\": \"127.0.0.1:5000\"}" >> config.json
       - name: Install dependencies
         run: |
           pip3 install --upgrade pip
