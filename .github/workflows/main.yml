@@ -23,6 +23,7 @@ jobs:
         run: |
           printf "{\n\"ENV\": \"development\",\n" > config.json
           printf "\"SECRET_KEY\": \"dev\",\n" >> config.json
+          printf "\"HOST\": \"127.0.0.1\",\n" >> config.json
           printf "\"HOST_PORT\": \"127.0.0.1:5000\"}" >> config.json
       - name: Install dependencies
         run: |
