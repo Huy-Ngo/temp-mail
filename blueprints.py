@@ -1,3 +1,5 @@
+#  Copyright (c) 2020  Ngô Ngọc Đức Huy
+
 from requests import get, post
 from json import load, dumps
 from time import sleep
@@ -14,16 +16,24 @@ with open('config.json', 'r') as f:
 
 
 def fetch_mail(token):
-    sleep(1)
+    """Send GET request to the API server."""
     all_mails = get(f'http://{host_port}/api/mail/',
                     headers={'Authorization': f'Bearer {token}'}).json()
     if 'mails' not in all_mails or 'address' not in all_mails:
         message = all_mails['message']
         if message == 'Token has expired':
             message = 'Your email has expired. Please make a new one.'
-        return render_template('views/error.html', message=message)
-    mails = all_mails['mails']
-    return dumps(mails)
+        return False, message
+    else:
+        return True, all_mails
+
+
+def stream_mail(token):
+    sleep(5)
+    success, response = fetch_mail(token)
+    if not success:
+        return render_template('views/error.html', message=response)
+    return dumps(response['mails'])
 
 
 @bp.route('/', methods=['GET', 'POST'])
@@ -41,15 +51,11 @@ def auth():
 @bp.route('/mail')
 def mailbox():
     token = request.cookies.get('access_token_cookie')
-    all_mails = get(f'http://{host_port}/api/mail/',
-                    headers={'Authorization': f'Bearer {token}'}).json()
-    if 'mails' not in all_mails or 'address' not in all_mails:
-        message = all_mails['message']
-        if message == 'Token has expired':
-            message = 'Your email has expired. Please make a new one.'
-        return render_template('views/error.html', message=message)
-    mails = all_mails['mails']
-    address = all_mails['address']
+    success, response = fetch_mail(token)
+    if not success:
+        return render_template('views/error.html', message=response)
+    mails = response['mails']
+    address = response['address']
     mails = sorted(mails, reverse=True, key=lambda m: m['id'])
     return render_template('views/mailbox.html', address=address, mails=mails)
 
@@ -60,8 +66,7 @@ def mail_stream():
 
     def event_stream():
         while True:
-            # wait for source data to be available, then push it
-            yield f'data: {fetch_mail(token)}\n\n'
+            yield f'data: {stream_mail(token)}\n\n'
 
     return Response(event_stream(), mimetype="text/event-stream")
 
