@@ -1,11 +1,19 @@
 {% extends 'base.html' %}
 {% block title %} Get a new mail {% endblock %}
 {% block content %}
-    <form method="post">
-        <div class="center-align">
-            <label for="address">Address</label>
-            <input id="address" type="text"/>
-            <button class="waves-effect waves-light indigo darken-1 btn" type="submit">Get a new mail</button>
-        </div>
-    </form>
+    <div class="container center-align tooltipped"
+         data-position="bottom"
+         data-tooltip="Leave address empty for randomly generated address">
+        <form method="post">
+            <div class="input-field inline">
+                <label for="address">Address</label>
+                <input id="address" name="address" type="text"/>
+            </div>
+            <span>@15minmail.tk</span>
+            <button class="waves-effect waves-light indigo darken-1 btn"
+                    type="submit">
+                Get a new mail
+            </button>
+        </form>
+    </div>
 {% endblock %}
