@@ -36,7 +36,9 @@
     </div>
     <script src="{{ url_for('static', filename='sse-listener.js') }}"></script>
 
-    <script>
-        M.toast({html: "{{message}}"})
-    </script>
+    {% if message %}
+        <script>
+            M.toast({html: "{{message}}"})
+        </script>
+    {% endif %}
 {% endblock %}
