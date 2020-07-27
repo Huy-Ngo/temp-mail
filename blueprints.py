@@ -3,6 +3,7 @@
 from requests import get, post
 from json import load, dumps
 from time import sleep
+from http import HTTPStatus
 
 from flask import (Blueprint, Response, request,
                    render_template, redirect, url_for)
@@ -43,11 +44,17 @@ def auth():
     """Route for home page, handling requests for new mail addresses."""
     if request.method == 'POST':
         address = request.form['address'] or None
-        account_info = post(f'http://{host_port}/api/auth/',
-                            data={'address': address}).json()
-
+        response = post(f'http://{host_port}/api/auth/',
+                        data={'address': address})
+        message = response.json()['message']
+        if response.status_code == HTTPStatus.BAD_REQUEST:
+            message += " A random email is generated instead."
+            response = post(f'http://{host_port}/api/auth/')
+        elif response.status_code != HTTPStatus.OK:
+            render_template('views/error.html', message=message)
+        account_info = response.json()
         token = account_info['account']['token']
-        response = redirect(url_for('.mailbox'))
+        response = redirect(url_for('.mailbox', message=message, _method='GET'))
         set_access_cookies(response, token)
         return response
     return render_template('views/auth.html')
@@ -58,12 +65,14 @@ def mailbox():
     """Route for mailbox, render emails received to client."""
     token = request.cookies.get('access_token_cookie')
     success, response = fetch_mail(token)
+    message = request.args.get('message')
     if not success:
         return render_template('views/error.html', message=response)
     mails = response['mails']
     address = response['address']
     mails = sorted(mails, reverse=True, key=lambda m: m['id'])
-    return render_template('views/mailbox.html', address=address, mails=mails)
+    return render_template('views/mailbox.html',
+                           address=address, mails=mails, message=message)
 
 
 @bp.route('/mail/stream')

@@ -39,7 +39,7 @@ class Auth(Resource):
             address = f'{address}@{host}'
             if UserModel.find_by_address(address) is not None:
                 return {
-                    'message': 'Failed to create an email address'
+                    'message': 'Email address has already been used.'
                 }, HTTPStatus.BAD_REQUEST
         token = create_access_token(identity=address)
         new_user = UserModel(address, token)

@@ -35,4 +35,9 @@
     </table>
     </div>
     <script src="{{ url_for('static', filename='sse-listener.js') }}"></script>
+
+    <script>
+    console.log('HELLO')
+     M.toast({html: "{{message}}"})
+    </script>
 {% endblock %}
