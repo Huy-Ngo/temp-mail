@@ -2,10 +2,22 @@
  * Copyright (c) 2020  Ngô Ngọc Đức Huy
  */
 
+function getCookie(name) {
+    return document.cookie.split('; ').reduce((r, v) => {
+        const parts = v.split('=');
+        return parts[0] === name ? decodeURIComponent(parts[1]) : r;
+    }, '');
+}
+
 const mailbox = document.getElementById("mailbox-body");
 const eventSource = new EventSource("/mail/stream");
 
 eventSource.onmessage = function(e) {
+    let expiration = getCookie('exp');
+    let now = new Date();
+    if (now > expiration) {
+        eventSource.removeEventListener('message', this);
+    }
     const mails  = JSON.parse(e.data);
     mailbox.innerHTML = '';
     for (let mail of mails) {

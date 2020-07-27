@@ -2,8 +2,14 @@
 
 {% block content %}
     <div class="center-align">
+        <div id="timer">
+            <div>Remaining time:</div>
+            <span id="minute">00</span>:
+            <span id="second">00</span>
+        </div>
         Your mail address is:
         <a href="mailto:{{ address }}" class="blue-text">{{ address }}</a>
     </div>
     {% block body %} {% endblock %}
+    <script type="text/javascript" src="{{ url_for('static', filename='timer.js') }}"></script>
 {% endblock %}

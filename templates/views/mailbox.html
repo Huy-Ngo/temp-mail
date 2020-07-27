@@ -1,43 +1,42 @@
 {% extends 'views/mail_base.html' %}
 {% block title %} Mailbox - {{ address }} {% endblock %}
 {% block refresh %}
-{#    <meta http-equiv="refresh" content="10"/>#}
+    {#    <meta http-equiv="refresh" content="10"/>#}
 {% endblock %}
 {% block body %}
     <div class="center-align container">
-    {% if mails|length > 0 %}
-        You have {{ mails|length }} {% if mails|length == 1 %} mail {% else %} mails{% endif %}:
-    {% else %}
-        <div>Your mailbox is empty.</div>
-    {% endif %}
-    <table id="mailbox">
-        <thead>
+        {% if mails|length > 0 %}
+            You have {{ mails|length }} {% if mails|length == 1 %} mail {% else %} mails{% endif %}:
+        {% else %}
+            <div>Your mailbox is empty.</div>
+        {% endif %}
+        <table id="mailbox">
+            <thead>
             <tr>
                 <th>From</th>
                 <th>Subject</th>
                 <th>Received at</th>
             </tr>
-        </thead>
-        <tbody id="mailbox-body">
-        {% for mail in mails %}
-            <tr onclick="location='{{ url_for('gui.mail', _id=mail['id']) }}'"
+            </thead>
+            <tbody id="mailbox-body">
+            {% for mail in mails %}
+                <tr onclick="location='{{ url_for('gui.mail', _id=mail['id']) }}'"
                     class="link {{ 'read' if mail['is_read'] else 'unread orange-text text-darken-4' }}">
-                <td> {{ mail['headers']['from'] }} </td>
-                <td> {{ mail['headers']['subject'] }}
-                    {% if not mail['is_read'] %}
-                        <span class="new badge red right" data-badge-caption="unread"></span>
-                    {% endif %}
-                </td>
-                <td> {{ mail['headers']['date'] }} </td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+                    <td> {{ mail['headers']['from'] }} </td>
+                    <td> {{ mail['headers']['subject'] }}
+                        {% if not mail['is_read'] %}
+                            <span class="new badge red right" data-badge-caption="unread"></span>
+                        {% endif %}
+                    </td>
+                    <td> {{ mail['headers']['date'] }} </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
     </div>
     <script src="{{ url_for('static', filename='sse-listener.js') }}"></script>
 
     <script>
-    console.log('HELLO')
-     M.toast({html: "{{message}}"})
+        M.toast({html: "{{message}}"})
     </script>
 {% endblock %}

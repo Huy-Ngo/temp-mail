@@ -7,7 +7,7 @@ from http import HTTPStatus
 
 from flask import (Blueprint, Response, request,
                    render_template, redirect, url_for)
-from flask_jwt_extended import set_access_cookies
+from flask_jwt_extended import set_access_cookies, decode_token
 
 bp = Blueprint('gui', __name__, url_prefix='/')
 with open('config.json', 'r') as f:
@@ -68,6 +68,9 @@ def auth():
         token = account_info['account']['token']
         response = redirect(url_for('.mailbox', message=message, _method='GET'))
         set_access_cookies(response, token)
+        payload = decode_token(token)
+        exp = payload['exp']
+        response.set_cookie('exp', str(exp))
         return response
     return render_template('views/auth.html')
 
