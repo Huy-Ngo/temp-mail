@@ -42,7 +42,9 @@ def stream_mail(token: str):
 def auth():
     """Route for home page, handling requests for new mail addresses."""
     if request.method == 'POST':
-        account_info = post(f'http://{host_port}/api/auth/').json()
+        address = request.form['address'] or None
+        account_info = post(f'http://{host_port}/api/auth/',
+                            data={'address': address}).json()
 
         token = account_info['account']['token']
         response = redirect(url_for('.mailbox'))

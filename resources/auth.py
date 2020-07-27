@@ -6,6 +6,7 @@ from http import HTTPStatus
 from json import load
 
 from flask_restful import Resource
+from flask_restful.reqparse import RequestParser
 from flask_jwt_extended import create_access_token
 
 from models import UserModel
@@ -23,13 +24,19 @@ def generate_random_string():
 
 class Auth(Resource):
     """API Resource for getting a new mail address."""
-    def post(self, address=None):
+    parser = RequestParser()
+    parser.add_argument('address')
+
+    def post(self):
         """Create a new email address"""
+        args = Auth.parser.parse_args()
+        address = args['address']
         if address is None:
             address = f'{generate_random_string()}@{host}'
             while UserModel.find_by_address(address) is not None:
                 address = f'{generate_random_string()}@{host}'
         else:
+            address = f'{address}@{host}'
             if UserModel.find_by_address(address) is not None:
                 return {
                     'message': 'Failed to create an email address'
