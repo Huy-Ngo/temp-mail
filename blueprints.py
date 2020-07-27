@@ -65,7 +65,7 @@ def auth():
         elif response.status_code != HTTPStatus.OK:
             render_template('views/error.html', message=message)
         account_info = response.json()
-        token = account_info['account']['token']
+        token = account_info['account']['access_token']
         response = redirect(url_for('.mailbox', message=message, _method='GET'))
         set_access_cookies(response, token)
         payload = decode_token(token)
