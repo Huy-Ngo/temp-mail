@@ -2,6 +2,8 @@
 
 from datetime import datetime, timedelta
 
+from flask_jwt_extended import decode_token
+
 from db import db
 
 
@@ -42,8 +44,8 @@ class UserModel(db.Model):
 
         :return: `True` if it is still valid
         `False` if it has expired."""
-        expiration_time = self.create_at + timedelta(minutes=15)
-        current_time = datetime.utcnow()
+        expiration_time = decode_token(self.access_token)['exp']
+        current_time = datetime.utcnow().timestamp()
         is_valid = expiration_time > current_time
         self.is_expired = not is_valid
         db.session.add(self)
