@@ -50,6 +50,12 @@ class UserModel(db.Model):
         db.session.commit()
         return is_valid
 
+    def refresh_tokens(self, access_token=None, refresh_token=None):
+        if access_token is not None:
+            self.access_token = access_token
+        if refresh_token is not None:
+            self.refresh_token = refresh_token
+
     def save_to_db(self):
         """Save the email address to database."""
         db.session.add(self)
