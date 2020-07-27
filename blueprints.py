@@ -39,6 +39,18 @@ def stream_mail(token: str):
     return dumps(response['mails'])
 
 
+@bp.route('/mail/stream')
+def mail_sse_stream():
+    """Route for SSE stream, serve for mailbox updating."""
+    token = request.cookies.get('access_token_cookie')
+
+    def event_stream():
+        while True:
+            yield f'data: {stream_mail(token)}\n\n'
+
+    return Response(event_stream(), mimetype="text/event-stream")
+
+
 @bp.route('/', methods=['GET', 'POST'])
 def auth():
     """Route for home page, handling requests for new mail addresses."""
@@ -73,18 +85,6 @@ def mailbox():
     mails = sorted(mails, reverse=True, key=lambda m: m['id'])
     return render_template('views/mailbox.html',
                            address=address, mails=mails, message=message)
-
-
-@bp.route('/mail/stream')
-def mail_sse_stream():
-    """Route for SSE stream, serve for mailbox updating."""
-    token = request.cookies.get('access_token_cookie')
-
-    def event_stream():
-        while True:
-            yield f'data: {stream_mail(token)}\n\n'
-
-    return Response(event_stream(), mimetype="text/event-stream")
 
 
 @bp.route('/mail/<int:_id>')
