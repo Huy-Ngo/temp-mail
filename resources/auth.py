@@ -7,7 +7,11 @@ from json import load
 
 from flask_restful import Resource
 from flask_restful.reqparse import RequestParser
-from flask_jwt_extended import create_access_token
+from flask_jwt_extended import (
+    create_access_token, create_refresh_token,
+    jwt_refresh_token_required,
+    get_jwt_identity
+)
 
 from models import UserModel
 
@@ -41,10 +45,24 @@ class Auth(Resource):
                 return {
                     'message': 'Email address has already been used.'
                 }, HTTPStatus.BAD_REQUEST
-        token = create_access_token(identity=address)
-        new_user = UserModel(address, token)
+        access_token = create_access_token(identity=address)
+        refresh_token = create_refresh_token(identity=address)
+        new_user = UserModel(address, access_token, refresh_token)
         new_user.save_to_db()
         return {
             'account': new_user.json(),
             'message': 'A temporary mail created'
         }, HTTPStatus.CREATED
+
+    @jwt_refresh_token_required
+    def put(self):
+        """Update an email address, i.e. delay its expiration."""
+        current_user = get_jwt_identity()
+        new_access_token = create_access_token(identity=current_user)
+        user_object: UserModel = UserModel.find_by_address(current_user)
+        user_object.refresh_tokens(access_token=new_access_token)
+        user_object.save_to_db()
+        return {
+            'message': 'The duration is lengthened.',
+            'access_token': new_access_token
+        }, HTTPStatus.OK

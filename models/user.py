@@ -2,6 +2,8 @@
 
 from datetime import datetime, timedelta
 
+from flask_jwt_extended import decode_token
+
 from db import db
 
 
@@ -9,22 +11,25 @@ class UserModel(db.Model):
     """Model for representing and storing addresses."""
     id = db.Column(db.Integer, primary_key=True)
     email_address = db.Column(db.String(254))
-    token = db.Column(db.String(256))
+    access_token = db.Column(db.String(256))
+    refresh_token = db.Column(db.String(256))
     is_expired = db.Column(db.Boolean)
     create_at = db.Column(db.DateTime, default=datetime.utcnow)
     mails = db.relationship('MailModel', backref='user', lazy=True)
 
-    def __init__(self, email_address: str, token: str):
+    def __init__(self, email_address: str, access_token: str, refresh_token: str):
         self.email_address = email_address
-        self.token = token
+        self.access_token = access_token
         self.is_expired = False
+        self.refresh_token = refresh_token
 
     def json(self):
         """Return the information of the object as a JSON"""
         return {
             'id': self.id,
             'email_address': self.email_address,
-            'token': self.token,
+            'access_token': self.access_token,
+            'refresh_token': self.refresh_token,
             'is_expired': self.is_expired,
             'create_at': self.create_at.__str__()
         }
@@ -35,17 +40,23 @@ class UserModel(db.Model):
         return cls.query.filter_by(email_address=address).first()
 
     def check_validity(self):
-        """Check if the token is still valid.
+        """Check if the access_token is still valid.
 
         :return: `True` if it is still valid
         `False` if it has expired."""
-        expiration_time = self.create_at + timedelta(minutes=15)
-        current_time = datetime.utcnow()
+        expiration_time = decode_token(self.access_token)['exp']
+        current_time = datetime.utcnow().timestamp()
         is_valid = expiration_time > current_time
         self.is_expired = not is_valid
         db.session.add(self)
         db.session.commit()
         return is_valid
+
+    def refresh_tokens(self, access_token=None, refresh_token=None):
+        if access_token is not None:
+            self.access_token = access_token
+        if refresh_token is not None:
+            self.refresh_token = refresh_token
 
     def save_to_db(self):
         """Save the email address to database."""

@@ -30,12 +30,18 @@ function prettyTime(time) {
 }
 
 let expiration = new Date(getCookie('exp') * 1000);
+let reminded = false
 
 function countDown() {
     let current = new Date();
     let difference = getTimeDifference(expiration - current);
     minute.innerHTML = prettyTime(difference[0]);
     second.innerHTML = prettyTime(difference[1]);
+    if (!reminded && difference[0] === 0) {
+        M.toast({html: "You're running out of time"});
+        M.toast({html: "You can add more time by clicking on \"Add more time\""});
+        reminded = true;
+    }
 }
 
 setInterval(countDown, 1000)
