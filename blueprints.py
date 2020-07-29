@@ -24,14 +24,12 @@ def set_tokens(access_token, refresh_token, response):
     payload = decode_token(access_token)
     exp = payload['exp']
     response.set_cookie('exp', str(exp))
-    print('DEBUG:', response.headers.getlist('Set-Cookie'))
     return response
 
 
 def refresh(refresh_token: str) -> Tuple[dict, int]:
     response = put(f'http://{host_port}/api/auth/',
                    headers={'Authorization': f'Bearer {refresh_token}'})
-    print(response.json())
     return response.json(), response.status_code
 
 
@@ -101,9 +99,9 @@ def mailbox():
         if status != HTTPStatus.OK:
             return render_template('views/error.html',
                                    message='Refresh duration failed.')
-        response = redirect(url_for('.mailbox'))
+        access_token = response['access_token']
+        response = redirect(url_for('.mailbox', message=response['message']))
         response = set_tokens(access_token, refresh_token, response)
-        print('DEBUG:', response.headers.getlist('Set-Cookie'))
         return response
     success, response = fetch_mail(access_token)
     message = request.args.get('message')
@@ -127,7 +125,7 @@ def mail(_id: int):
             return render_template('views/error.html',
                                    message='Refresh duration failed.')
         access_token = response['access_token']
-        response = redirect(url_for('.mailbox'))
+        response = redirect(url_for('.mailbox', message=response['message']))
         response = set_tokens(access_token, refresh_token, response)
         return response
     email = get(f'http://{host_port}/api/mail/{_id}',
