@@ -63,5 +63,6 @@ class Auth(Resource):
         user_object.refresh_tokens(access_token=new_access_token)
         user_object.save_to_db()
         return {
-            'message': 'The duration is lengthened.'
+            'message': 'The duration is lengthened.',
+            'access_token': new_access_token
         }, HTTPStatus.OK
