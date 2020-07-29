@@ -1,13 +1,14 @@
 #  Copyright (c) 2020  Ngô Ngọc Đức Huy
 
-from requests import get, post
+from requests import get, post, put
 from json import load, dumps
 from time import sleep
 from http import HTTPStatus
+from typing import Tuple
 
 from flask import (Blueprint, Response, request,
                    render_template, redirect, url_for)
-from flask_jwt_extended import set_access_cookies, decode_token
+from flask_jwt_extended import set_access_cookies, set_refresh_cookies, decode_token
 
 bp = Blueprint('gui', __name__, url_prefix='/')
 with open('config.json', 'r') as f:
@@ -15,6 +16,23 @@ with open('config.json', 'r') as f:
     host_port = data['HOST_PORT']
     env = data['ENV']
     host = data['HOST']
+
+
+def set_tokens(access_token, refresh_token, response):
+    set_access_cookies(response, access_token)
+    set_refresh_cookies(response, refresh_token)
+    payload = decode_token(access_token)
+    exp = payload['exp']
+    response.set_cookie('exp', str(exp))
+    print('DEBUG:', response.headers.getlist('Set-Cookie'))
+    return response
+
+
+def refresh(refresh_token: str) -> Tuple[dict, int]:
+    response = put(f'http://{host_port}/api/auth/',
+                   headers={'Authorization': f'Bearer {refresh_token}'})
+    print(response.json())
+    return response.json(), response.status_code
 
 
 def fetch_mail(token: str):
@@ -65,21 +83,29 @@ def auth():
         elif response.status_code != HTTPStatus.OK:
             render_template('views/error.html', message=message)
         account_info = response.json()
-        token = account_info['account']['access_token']
-        response = redirect(url_for('.mailbox', message=message, _method='GET'))
-        set_access_cookies(response, token)
-        payload = decode_token(token)
-        exp = payload['exp']
-        response.set_cookie('exp', str(exp))
+        access_token = account_info['account']['access_token']
+        refresh_token = account_info['account']['refresh_token']
+        response = redirect(url_for('.mailbox', message=message))
+        response = set_tokens(access_token, refresh_token, response)
         return response
     return render_template('views/auth.html')
 
 
-@bp.route('/mail')
+@bp.route('/mail', methods=['GET', 'POST'])
 def mailbox():
     """Route for mailbox, render emails received to client."""
-    token = request.cookies.get('access_token_cookie')
-    success, response = fetch_mail(token)
+    access_token = request.cookies.get('access_token_cookie')
+    refresh_token = request.cookies.get('refresh_token_cookie')
+    if request.method == 'POST':
+        response, status = refresh(refresh_token)
+        if status != HTTPStatus.OK:
+            return render_template('views/error.html',
+                                   message='Refresh duration failed.')
+        response = redirect(url_for('.mailbox'))
+        response = set_tokens(access_token, refresh_token, response)
+        print('DEBUG:', response.headers.getlist('Set-Cookie'))
+        return response
+    success, response = fetch_mail(access_token)
     message = request.args.get('message')
     if not success:
         return render_template('views/error.html', message=response)
@@ -90,12 +116,22 @@ def mailbox():
                            address=address, mails=mails, message=message)
 
 
-@bp.route('/mail/<int:_id>')
+@bp.route('/mail/<int:_id>', methods=['GET', 'POSt'])
 def mail(_id: int):
     """Route for specific mail with id."""
-    token = request.cookies.get('access_token_cookie')
+    access_token = request.cookies.get('access_token_cookie')
+    refresh_token = request.cookies.get('refresh_token_cookie')
+    if request.method == 'POST':
+        response, status = refresh(refresh_token)
+        if status != HTTPStatus.OK:
+            return render_template('views/error.html',
+                                   message='Refresh duration failed.')
+        access_token = response['access_token']
+        response = redirect(url_for('.mailbox'))
+        response = set_tokens(access_token, refresh_token, response)
+        return response
     email = get(f'http://{host_port}/api/mail/{_id}',
-                headers={'Authorization': f'Bearer {token}'}).json()
+                headers={'Authorization': f'Bearer {access_token}'}).json()
     if 'mail' not in email or 'address' not in email:
         message = email['message']
         if message == 'Token has expired':
