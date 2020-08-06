@@ -29,9 +29,9 @@ def parse_payload_tree(mime_data: Message):
     """
     flat_data = {}
     if 'text/plain' in mime_data['content-type']:
-        flat_data['text/plain'] = mime_data.get_payload()
+        flat_data['text/plain'] = mime_data.get_payload(decode=True)
     elif 'text/html' in mime_data['content-type']:
-        flat_data['text/html'] = mime_data.get_payload()
+        flat_data['text/html'] = mime_data.get_payload(decode=True)
     elif 'image' in mime_data['content-type']:
         cid = mime_data['content-id']
         cid = cid[1:-1]
