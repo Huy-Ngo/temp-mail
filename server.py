@@ -7,8 +7,6 @@ from threading import Thread
 from json import load
 from typing import Dict, List
 
-from quopri import decodestring
-
 from email.message import Message
 from email.parser import Parser
 from email.policy import default
@@ -65,7 +63,7 @@ def deliver_mail(mailfrom: str, rcpttos: List[str], mime_data):
     text = (parsed_data['text/plain']
             if 'text/plain' in parsed_data
             else 'Plain text not available')
-    html = (decodestring(parsed_data['text/html']).decode()
+    html = (parsed_data['text/html']
             if 'text/html' in parsed_data
             else 'HTML not available')
     if 'images' in parsed_data:
