@@ -62,9 +62,12 @@ def deliver_mail(mailfrom: str, rcpttos: List[str], mime_data):
         mime_data = mime_data.decode()
     mime_data = Parser(policy=default).parsestr(mime_data)
     parsed_data = parse_payload_tree(mime_data)
-    text = parsed_data['text/plain']
-    html = parsed_data['text/html']
-    html = decodestring(html).decode()
+    text = (parsed_data['text/plain']
+            if 'text/plain' in parsed_data
+            else 'Plain text not available')
+    html = (decodestring(parsed_data['text/html']).decode()
+            if 'text/html' in parsed_data
+            else 'HTML not available')
     if 'images' in parsed_data:
         html = replace_image(html, parsed_data['images'])
     requests.post(url, {
