@@ -11,7 +11,13 @@
                 <div class="from">From: {{ mail['headers']['from'] }}</div>
                 <div class="to">To: {{ mail['headers']['to'] }}</div>
                 <hr>
-                <div class="content"> {{ mail['payload']['html']|safe }} </div>
+                {% if mail['payload']['html'] != 'HTML not available' %}
+                    <div class="content"> {{ mail['payload']['html']|safe }} </div>
+                {% elif mail['payload']['text'] != 'Plain text not available' %}
+                    <div class="content"> {{ mail['payload']['html'] }} </div>
+                {% else %}
+                    <div class="content"> The mail is empty. </div>
+                {% endif %}
                 <hr>
                 <div class="datetime grey-text text-darken-1">Received at: {{ mail['headers']['date'] }}</div>
             </div>
